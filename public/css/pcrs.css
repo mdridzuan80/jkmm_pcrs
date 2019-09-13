@@ -1,0 +1,36 @@
+.callout.callout-checkinout {
+    background-color: #1abc9c !important;
+    border-color: #16a085;
+    padding: 5px 10px 5px 5px;
+    margin: 0 0 4px;
+    font-weight: 700;
+}
+
+.callout.callout-cutiumum {
+    background-color: #f1c40f !important;
+    border-color: #f39c12;
+    padding: 5px 10px 5px 5px;
+    margin: 0 0 4px;
+    font-weight: 700;
+}
+
+.callout.callout-lain {
+    background-color: #e74c3c !important;
+    border-color: #c0392b;
+    padding: 5px 10px 5px 5px;
+    margin: 0 0 4px;
+    font-weight: 700;
+}
+
+.show-read-more .seterusnya-text {
+    display: none !important;
+}
+
+.input-hidden {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    float: right;
+}
