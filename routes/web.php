@@ -58,6 +58,13 @@ Route::middleware('auth:internal,ldap')->group(function () {
         Route::patch('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:edit-shift');
         Route::delete('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:delete-shift');
 
+        // Cuti
+        Route::get('/cuti', 'konfigurasiController@rcpGridCuti')->middleware('can:view-cuti');
+        //Route::post('/waktu_bekerja', 'WaktuBerperingkatController@rcpTambahWaktuBekerja')->middleware('can:add-shift');
+        //Route::patch('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:edit-shift');
+        //Route::delete('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:delete-shift');
+
+
         // Anggota
         Route::post('/anggota_grid', 'AnggotaController@rpcAnggotaGrid')->middleware('can:view-anggota');
         Route::post('/anggota_penilai_grid', 'AnggotaController@rpcAnggotaPenilaiGrid')->middleware('can:view-anggota');

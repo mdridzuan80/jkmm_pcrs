@@ -20,7 +20,9 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab_1" data-toggle="tab">Sistem</a></li>
-                    <li><a href="#tab_2" data-toggle="tab">Emel</a></li>
+                    @can('view-cuti')
+                        <li><a id="tab_cuti" href="#tab_2">Cuti Umum</a></li>
+                    @endcan
                     @can('view-shift')
                         <li><a id="tab_waktu_bekerja" href="#tab_3" >Waktu Bekerja</a></li>
                     @endcan
@@ -69,15 +71,11 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="tab_2">
-                            The European languages are members of the same family. Their separate existence is a myth.
-                            For science, music, sport, etc, Europe uses the same vocabulary. The languages only differ
-                            in their grammar, their pronunciation and their most common words. Everyone realizes why a
-                            new common language would be desirable: one could refuse to pay expensive translators. To
-                            achieve this, it would be necessary to have uniform grammar, pronunciation and more common
-                            words. If several languages coalesce, the grammar of the resulting language is more simple
-                            and regular than that of the individual languages.
-                        </div>
+                        @can('view-cuti')
+                            <div class="tab-pane" id="tab_2">
+                                <div id="cuti_content"></div>
+                            </div>
+                        @endcan
 
                         @can('view-shift')
                             <div class="tab-pane" id="tab_3">
@@ -250,10 +248,6 @@
 
             $('#tab_waktu_bekerja').on('shown.bs.tab', function(e) {
                 var placeholder = $('#waktu_bekerja_content');
-                //e.target;
-                //e.relatedTarget;
-                //console.log(e.relatedTarget);
-                //$('#waktu_bekerja_content').html('Hello World');
 
                 populateDg(base_url+'rpc/waktu_bekerja','#waktu_bekerja_content')
             });
@@ -403,6 +397,38 @@
                     }
                 });
             });
+
+            // cuti
+            var tabCuti = $('#tab_cuti');
+            tabCuti.on('click', function(e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            tabCuti.on('shown.bs.tab', function(e) {                
+                populateDg(base_url+'rpc/cuti','#cuti_content')
+            });
+
+            var cutiContent = $('#cuti_content');
+            cutiContent.on('click', '.row-item', function(e) {
+                var rows = $('#cuti_content .row-item');
+                userRow = $(this);
+
+                Object.values(rows).forEach(function(row)
+                {
+                    $(row).removeAttr('style');
+                });
+
+                id = $(this).data('id');
+                
+                $(this).css('background-color', '#c2eafe');
+
+                $('#top-btn-cuti-edit').prop('disabled', false);
+                $('#top-btn-cuti-delete').prop('disabled', false);
+
+            });
+
+
         });
     </script>
 @endsection

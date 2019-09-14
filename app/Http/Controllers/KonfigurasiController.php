@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cuti;
 use App\Department;
 use League\Fractal\Manager;
 use App\Base\BaseController;
@@ -33,5 +34,14 @@ class KonfigurasiController extends BaseController
     public function rpcFlowBahagianUpdate(Department $department, Request $request)
     {
         $department->updateFlow($request);
+    }
+
+    public function rcpGridCuti()
+    {
+        $perPage = 10;
+
+        $cuti = Cuti::paginate($perPage);
+
+        return view('cuti.index', compact('cuti'));
     }
 }

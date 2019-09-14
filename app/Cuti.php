@@ -14,8 +14,6 @@ class Cuti extends Eventable
 
     protected $dates = [
         'tarikh',
-        'start',
-        'end',
     ];
 
     public function __construct()

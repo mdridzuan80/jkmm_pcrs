@@ -53,6 +53,11 @@ class PcrsGate
         Gate::define('edit-shift', $this->minPrivilege(Role::ADMIN));
         Gate::define('delete-shift', $this->minPrivilege(Role::ADMIN));
 
+        Gate::define('view-cuti', $this->minPrivilege(Role::ADMIN));
+        Gate::define('add-cuti', $this->minPrivilege(Role::ADMIN));
+        Gate::define('edit-cuti', $this->minPrivilege(Role::ADMIN));
+        Gate::define('delete-cuti', $this->minPrivilege(Role::ADMIN));
+
         Gate::define('view-kelulusan', $this->kelulusan());
     }
 
