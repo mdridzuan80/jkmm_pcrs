@@ -37,7 +37,7 @@ class User extends Authenticatable
 
     public function username()
     {
-        return 'email';
+        return 'username';
     }
 
     public function anggota()
@@ -95,10 +95,10 @@ class User extends Authenticatable
     {
         $this->anggota_id = $profil->userid;
         $this->name = $profil->xtraAttr->nama;
-        $this->username = $request->input('txtEmail');
-        $this->domain = 'internal';
+        $this->username = $request->input('txtEmail') ?? $request->input('opt-user');
+        $this->domain = $request->input('opt-domain', 'internal');
         $this->password = bcrypt($request->input('txtKatalaluan'));
-        $this->email = $request->input('txtEmail');
+        $this->email = ($request->input('opt-domain') == 'ldap') ? $request->input('opt-user') . '@melaka.gov.my' : $request->input('txtEmail');
         $this->save();
         $this->roles()->attach(Role::where('key', Role::PENGGUNA)->first(), ['department_id' => $profil->xtraAttr->basedept_id]);
     }

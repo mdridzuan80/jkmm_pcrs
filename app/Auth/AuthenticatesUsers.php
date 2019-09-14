@@ -46,10 +46,12 @@ trait AuthenticatesUsers
         }
 
         if ($this->attemptLogin($request)) {
+            $request->session()->put('guard', $request->input('domain'));
+
             if ($request->input('username') === env('PCRS_DEFAULT_USER_ADMIN', 'admin')) {
                 $request->session()->put('perananSemasa', Role::SUPER_ADMIN);
             } else {
-                $request->session()->put('perananSemasa', Auth::user()->roles()->orderBy('priority')->first()->key);
+                $request->session()->put('perananSemasa', Auth::guard($request->input('domain'))->user()->roles()->orderBy('id')->first()->key);
             }
 
             return $this->sendLoginResponse($request);
@@ -85,7 +87,7 @@ trait AuthenticatesUsers
      */
     protected function attemptLogin(Request $request)
     {
-        return $this->guard()->attempt(
+        return $this->guard($request->input('domain'))->attempt(
             $this->credentials($request),
             $request->filled('remember')
         );
@@ -154,7 +156,7 @@ trait AuthenticatesUsers
      */
     public function username()
     {
-        return 'email';
+        return 'username';
     }
 
     /**
@@ -165,7 +167,8 @@ trait AuthenticatesUsers
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        $this->guard('')->logout();
+        $this->guard('ldap')->logout();
 
         $request->session()->invalidate();
 
@@ -188,8 +191,8 @@ trait AuthenticatesUsers
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function guard()
+    protected function guard($domain)
     {
-        return AuthFacade::guard();
+        return AuthFacade::guard($domain);
     }
 }

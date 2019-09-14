@@ -14,7 +14,7 @@ return [
  */
 
     'defaults' => [
-        'guard' => 'mohr',
+        'guard' => 'internal',
         'passwords' => 'users',
     ],
 
@@ -36,25 +36,15 @@ return [
      */
 
     'guards' => [
-        'mohr' => [
-            'driver' => 'session',
-            'provider' => 'mohr',
-        ],
-
-        'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-        ],
-        
-        /* 'internal' => [
+        'internal' => [
             'driver' => 'session',
             'provider' => 'pcrs',
-        ], */
+        ],
 
-        /* 'ldap' => [
+        'ldap' => [
             'driver' => 'session',
             'provider' => 'ldap',
-        ], */
+        ],
     ],
 
     /*

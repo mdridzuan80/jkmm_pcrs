@@ -35,7 +35,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <img src="{{ asset('dist/img/logo_dalam.png') }}" alt="Logo Rasmi eMasa">
+    <img src="{{ asset('dist/img/logo_dalam.png') }}" alt="Logo Rasmi PCRS">
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -49,21 +49,20 @@
 
     <form method="post" action="{{ route('login') }}" class="detectCapslocks" data-message="Butang caps Lock anda sedang aktif">
       @csrf
-      <input type="hidden" name="domain" value="internal">
       <div class="form-group has-feedback detectCapslocks">
-        <input type="email" class="form-control" placeholder="Alamat Email" name="email" value="{{ old('email') }}" required autofocus>
+        <input type="text" class="form-control" placeholder="ID Pengguna" name="username" value="{{ old('username') }}" required autofocus>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Katalaluan" name="password" required>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
-      {{-- <div class="form-group">
+      <div class="form-group">
         <select class="form-control" name="domain" required>
             <option value="internal" {{ (old('domain') === 'internal') ? 'selected':'' }} >INTERNAL</option>
-            <option value="melaka.gov" {{ (old('domain') === 'melaka.gov') ? 'selected':'' }} >MELAKA.GOV</option>
+            <option value="ldap" {{ (old('domain') === 'melaka.gov') ? 'selected':'' }} >MELAKA.GOV</option>
         </select>
-      </div> --}}
+      </div>
       <div class="row">
         <div class="col-xs-8">
           
