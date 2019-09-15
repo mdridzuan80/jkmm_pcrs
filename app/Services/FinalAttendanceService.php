@@ -33,7 +33,7 @@ class FinalAttendanceService
 
         $cuti = Cuti::whereBetween('tarikh', [$tkhMula, $fTarikhTamat])->get();
         $senaraiXAnggota = XtraAnggota::with('anggota', 'shifts')->when($usersCollection->isNotEmpty(), function ($query, $value) use ($usersCollection) {
-            return $query->whereIn('email', $usersCollection->toArray());
+            return $query->whereIn('anggota_id', $usersCollection->toArray());
         })->get();
 
         foreach ($senaraiXAnggota as $xAnggota) {
