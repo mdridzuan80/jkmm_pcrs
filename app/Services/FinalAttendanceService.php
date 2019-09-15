@@ -71,7 +71,7 @@ class FinalAttendanceService
     {
         $preData = $this->preDataFinalAttendance($profil, $tarikh, $shift, $cuti, $rekodKehadiran);
 
-        $this->janaFinalAttendance($profil, $preData, $shift);
+        $this->janaFinalAttendance($preData);
 
         if ($this->statusLewat) {
             $this->tambahLewat($profil, $preData, $shift, Kelewatan::FLAG_NON_SMS);
@@ -89,6 +89,7 @@ class FinalAttendanceService
             'check_out' => $check_out = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_OUT, $profil->ZIP),
             'check_in_mid' => $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MIN, $profil->ZIP),
             'check_out_mid' => $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MOUT, $profil->ZIP),
+            'hours' => $this->totalHours($tarikh, $check_in, $check_out),
             'kesalahan' => json_encode($kesalahan = $this->getKesalahan($tarikh, $check_in, $check_out, $cuti, $shift)),
             'tatatertib_flag' => $this->getFlag($kesalahan),
             'shift_id' => $shift->id,
@@ -248,9 +249,36 @@ class FinalAttendanceService
         return $this->statusAwal = $check_in->diffInSeconds($check_out) < (60 * 60 * 9);
     }
 
-    public function janaFinalAttendance($profil, $preData, $shift)
+    public function janaFinalAttendance($preData)
     {
-        FinalAttendance::updateOrCreate(['anggota_id' => $preData->anggota_id, 'tarikh' => $preData->tarikh], (array) $preData);
+        $finalAttendance = FinalAttendance::firstOrNew(['anggota_id' => $preData->anggota_id, 'tarikh' => $preData->tarikh]);
+
+        $finalAttendance->anggota_id = $preData->anggota_id;
+        $finalAttendance->basedept_id = $preData->basedept_id;
+        $finalAttendance->tarikh = $preData->tarikh;
+        $finalAttendance->check_in = $preData->check_in;
+        $finalAttendance->check_out = $preData->check_out;
+        $finalAttendance->check_in_mid = $preData->check_in_mid;
+        $finalAttendance->check_out_mid = $preData->check_out_mid;
+        $finalAttendance->hours = $preData->hours;
+        $finalAttendance->kesalahan = $preData->kesalahan;
+        $finalAttendance->tatatertib_flag = $preData->tatatertib_flag;
+        $finalAttendance->shift_id = $preData->shift_id;
+
+        $finalAttendance->save();
+    }
+
+    public function totalHours($tarikh, $checkIn, $checkOut)
+    {
+        if ($checkOut) {
+            if (!$checkIn) {
+                $checkIn = $tarikh->copy()->addHours(9);
+            }
+
+            return $checkIn->diffInSeconds($checkOut);
+        }
+
+        return 0;
     }
 
     public function tambahLewat($profil, $preData, $shift, $smsFlag)
