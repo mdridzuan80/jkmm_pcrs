@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use App\Transformers\FlowBahagianTransformer;
 use League\Fractal\Resource\Item as FractalItem;
 
-
 class KonfigurasiController extends BaseController
 {
     public function __construct()
@@ -36,12 +35,34 @@ class KonfigurasiController extends BaseController
         $department->updateFlow($request);
     }
 
-    public function rcpGridCuti()
+    public function rcpGridCuti(Request $request)
     {
         $perPage = 10;
 
-        $cuti = Cuti::paginate($perPage);
+        $years = Cuti::years();
+        $year = $request->input('tahun', now()->year);
+        $cuti = Cuti::whereYear('tarikh', $year)->paginate($perPage);
 
-        return view('cuti.index', compact('cuti'));
+        return view('cuti.index', compact('cuti', 'years', 'year'));
+    }
+
+    public function rpcCutiAdd()
+    {
+        return view('cuti.add');
+    }
+
+    public function rpcCutiStore(Request $request)
+    {
+        $cuti = Cuti::firstOrNew(['tarikh' => $request->input('txtTarikhCuti')]);
+
+        $cuti->tarikh = $request->input('txtTarikhCuti');
+        $cuti->perihal = $request->input('txtPerihal');
+        $cuti->save();
+    }
+
+    public function rcpCutiDestroy(Request $request)
+    {
+        $cuti = Cuti::find($request->input('cutiId'));
+        $cuti->delete();
     }
 }

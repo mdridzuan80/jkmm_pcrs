@@ -1,3 +1,19 @@
+<div class="pull-left" style="padding-bottom:5px;">
+    <table>
+        <tbody><tr>
+            <td>
+                TAHUN&nbsp;
+            </td>
+            <td style="margin:0;padding:0;">
+                <select id="comTahun" class="form-control" name="comTahun">
+                    @foreach ($years as $item)
+                        <option value="{{ $item->year }}" {{ ($item->year == $year ) ? 'selected':'' }}>{{ $item->year }}</option>
+                    @endforeach
+                </select>
+            </td>
+        </tr>
+    </tbody></table>
+</div>
 <div class="pull-right" style="padding-bottom:5px;">
     <table>
         <tbody><tr>
@@ -23,10 +39,10 @@
                 <th>KETERANGAN</th>
             </tr>
             @foreach ($cuti as $c)
-                <tr class="row-item" data-id="{{ $c->id }}">
+                <tr class="row-item" data-id="{{ $c->id }}" data-tarikh="{{ $c->tarikh->format('d-m-Y') }}" data-perihal="{{ $c->perihal }}">
                     <td width="1">{{ $c->id }}</td>
-                    <td>{{ $c->tarikh->format('d-m-Y') }} </td>
-                    <td>{{ $c->perihal }} </td>
+                    <td>{{ $c->tarikh->format('d-m-Y') }}</td>
+                    <td>{{ $c->perihal }}</td>
                 </tr>
             @endforeach
         </tbody>

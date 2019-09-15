@@ -160,21 +160,83 @@
     @endcan
     <!-- /.modal -->
 
+        <!-- Modal --> 
+    @can('view-cuti')
+        <div id="modal-cuti-add" class="modal fade" >
+            <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: steelblue; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"><i class="fa fa-calendar"></i> Tambah/ Kemaskini Waktu Bekerja</h4>
+                </div>
+                <form id="frm-cuti-add">
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td><b>TARIKH</b></td>
+                                <td>
+                                    <div class="bootstrap-timepicker">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input id="txtTarikhCuti" name="txtTarikhCuti" type="text" class="form-control" autocomplete="off" required >
+                                                <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                                </div>
+                                            </div>
+                                        <!-- /.input group -->
+                                        </div>
+                                        <!-- /.form group -->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-3"><b>KETERANGAN</b></td>
+                                <td><input id="txtPerihal" class="form-control" type="text" name="txtPerihal" placeholder="Perihal" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" style="color:#dd4b39;" data-dismiss="modal">BATAL</button>
+                    <button type="submit" class="btn btn-success">SIMPAN</button>
+                </div>
+                </form>              
+            </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    @endcan
+    <!-- /.modal -->
+
+
 @endsection
 
 @section('scripts')
     <script>
         $(function() {
-            var shiftID = '';       
+            var shiftID = '';
+            var cutiID= '';
+            var tahun = new Date().getFullYear();     
 
-                $('#txtWaktuMula').timepicker({
-                    showInputs: false
-                })
+            $('#txtWaktuMula').timepicker({
+                showInputs: false
+            })
 
-                $('#txtWaktuTamat').timepicker({
-                    showInputs: false
-                })
+            $('#txtWaktuTamat').timepicker({
+                showInputs: false
+            })
 
+            $('#txtTarikhCuti').datepicker({
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                autoclose: true
+            }).on('hide', function(){
+                $('.modal-backdrop').css('z-index', 1020);
+            });
 
             $.ajax({
                 url: base_url+'rpc/department_tree',
@@ -298,6 +360,31 @@
                 });
             }
 
+            function populateDgCuti(url, place) {
+                $('.overlay').show();
+                $.ajax({
+                    method: 'post',
+                    url: url,
+                    data:{tahun: tahun},
+                    success: function(data, textStatus, jqXHR) {
+                        $('.overlay').hide();
+                        $(place).html(data);
+
+                        $('#top-btn-wp-edit').prop('disabled', true);
+                        $('#top-btn-wp-delete').prop('disabled', true);
+
+                        $('#comTahun').on('change', function(e){
+                            tahun = $(this).val();
+                            populateDgCuti(base_url+'rpc/cuti','#cuti_content');
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+
+                    },
+                    statusCode: login()
+                });
+            }
+
             $('#waktu_bekerja_content').on('click', '#top-btn-wp-add', function(e){                
                 $('#modal-shift-add').modal();
             });
@@ -406,7 +493,7 @@
             });
 
             tabCuti.on('shown.bs.tab', function(e) {                
-                populateDg(base_url+'rpc/cuti','#cuti_content')
+                populateDgCuti(base_url+'rpc/cuti','#cuti_content');                
             });
 
             var cutiContent = $('#cuti_content');
@@ -419,16 +506,125 @@
                     $(row).removeAttr('style');
                 });
 
-                id = $(this).data('id');
+                cutiID = $(this).data('id');
+
+                $('#modal-cuti-add').find('#txtTarikhCuti').val(moment($(this).data('tarikh'), "DD-MM-YYYY").format('YYYY-MM-DD'));
+                $('#modal-cuti-add').find('#txtPerihal').val($(this).data('perihal'));
                 
                 $(this).css('background-color', '#c2eafe');
 
                 $('#top-btn-cuti-edit').prop('disabled', false);
                 $('#top-btn-cuti-delete').prop('disabled', false);
-
             });
 
+            $('#cuti_content').on('click', '#top-btn-cuti-add', function(e){
+                $('#modal-cuti-add').find('#txtTarikhCuti').val(null);
+                $('#modal-cuti-add').find('#txtPerihal').val(null);
+                  
+                $('#modal-cuti-add').modal('show');
+            });
 
+            $('#cuti_content').on('click', '#top-btn-cuti-edit', function(e){                         
+                $('#modal-cuti-add').modal('show');
+            });
+
+            $('#modal-cuti-add').on('submit', '#frm-cuti-add', function(e){
+                e.preventDefault();
+                
+                //var form = this;
+                var formData = new FormData(this);
+
+                swal({
+                    title: 'Amaran!',
+                    text: 'Anda pasti untuk menambah maklumat ini?',
+                    type: 'warning',
+                    cancelButtonText: 'Tidak',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya!',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: () => !swal.isLoading(),
+                    preConfirm: () => {
+                        return new Promise((resolve,reject) => {
+                            $.ajax({
+                                method: 'post',
+                                data: formData,
+                                cache       : false,
+                                contentType : false,
+                                processData : false,
+                                url: base_url+'rpc/cuti/add',
+                                success: function(data, extStatus, jqXHR) {
+                                    //form.trigger('reset');
+                                    resolve({value: true});
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    reject(textStatus);
+                                },
+                                statusCode: login()
+                            });
+                        })
+                    }
+                }).then((result) => {
+                    e.target.txtPerihal.value = '';
+
+                    if (result.value) {
+                        swal({
+                            title: 'Berjaya!',
+                            text: 'Maklumat telah dikemaskini',
+                            type: 'success'
+                        });
+                        
+                        populateDgCuti(base_url+'rpc/cuti','#cuti_content')
+                        $('#modal-cuti-add').modal('hide');
+                    }
+                }).catch(function (error) {
+                    swal({
+                        title: 'Ralat!',
+                        text: 'Aktiviti tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                        type: 'error'
+                    });
+                });
+            });
+            
+            $('#cuti_content').on('click', '#top-btn-cuti-delete', function(e){
+                swal({
+                    title: 'Amaran!',
+                    text: 'Anda pasti untuk menghapuskan maklumat ini?',
+                    type: 'warning',
+                    cancelButtonText: 'Tidak',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya!',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    allowOutsideClick: () => !swal.isLoading(),
+                    preConfirm: () => {
+                        return new Promise((resolve, reject) => {
+
+                            $.ajax({
+                                method: 'post',
+                                data: {'_method': 'DELETE', 'cutiId': cutiID},
+                                url: base_url+'rpc/cuti',                
+                                success: function() {
+                                    swal({
+                                        title: 'Berjaya!',
+                                        text: 'Maklumat telah dihapuskan!',
+                                        type: 'success'
+                                    });
+                                    
+                                    populateDgCuti(base_url+'rpc/cuti','#cuti_content')
+                                },
+                                error: function(err) {
+                                    swal({
+                                        title: 'Ralat!',
+                                        text: 'Proses tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                                        type: 'error'
+                                    });
+                                },
+                                statusCode: login()
+                            });
+                        })
+                    }
+                });
+            });
         });
     </script>
 @endsection
