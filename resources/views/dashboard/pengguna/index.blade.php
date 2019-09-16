@@ -425,18 +425,21 @@
                         body,
                         theme: 'grid',
                         showHead: 'firstPage',
-                        margin: {top: 85},
+                        margin: {top: 85, bottom: 85},
                         columnStyles: {
-                            0: {halign: "center"},
                             1: {halign: "center"},
                             2: {halign: "center"},
                             3: {halign: "right"},
-                            4: {columnWidth: 250}
+                            4: {cellWidth: 250}
                         },
-                        didParseCell: function(data) {
+                        didParseCell: function(data) {                            
                             if (data.row.section == 'head') {
                                 data.cell.styles.fillColor = [54, 54, 54];
                                 data.cell.styles.halign = "center";
+
+                                if(data.column.dataKey === '0') {
+                                    data.cell.styles.halign = "left";
+                                }
 
                                 if(data.column.dataKey === '4') {
                                     data.cell.styles.halign = "left";
@@ -506,6 +509,11 @@
                             var pageSize = doc.internal.pageSize;
                             var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
                             var pageWidth = doc.internal.pageSize.width ? doc.internal.pageSize.width : doc.internal.pageSize.getWidth();
+                            
+                            doc.text("T/ T PEGAWAI", data.settings.margin.left, pageHeight - 70);
+                            doc.writeText(data.settings.margin.left - 80, pageHeight - 70 , "T/ T KETUA UNIT/ BAHAGIAN", { align: 'right' });
+                            doc.text("Tarikh :", data.settings.margin.left, pageHeight - 40);
+                            doc.writeText(data.settings.margin.left - 175, pageHeight - 40 , "Tarikh :", { align: 'right' });
 
                             doc.text("{{ env('APP_NAME') }}", data.settings.margin.left, pageHeight - 20);
                             doc.text("Dicetak pada : "+moment().format("lll"), data.settings.margin.left, pageHeight - 10, 'left');
