@@ -39,6 +39,7 @@ class Event extends TransformerAbstract
             'scheme' => $event['table_name'],
             'kesalahan' => $event['kesalahan'] ?? json_encode([]),
             'tatatertib_flag' => $event['tatatertib_flag'] ?? Kehadiran::FLAG_TATATERTIB_CLEAR,
+            'jumlah_jam' => isset($event['hours']) ? $this->totalHour($event['hours']) : 0,
             'checkIn' => $event['check_in'] ?? null,
             'checkOut' => $event['check_out'] ?? null,
             'table' => $event['table_name'],
@@ -127,5 +128,10 @@ class Event extends TransformerAbstract
         }
 
         return asset(Self::FLAG_KELULUSAN_ICON['DEFAULT']);
+    }
+
+    private function totalHour($hours)
+    {
+        return round($hours / 3600, 2);
     }
 }
