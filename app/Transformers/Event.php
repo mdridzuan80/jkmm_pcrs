@@ -132,6 +132,18 @@ class Event extends TransformerAbstract
 
     private function totalHour($hours)
     {
-        return round($hours / 3600, 2);
+        if ($hours !== 0) {
+            $hours = $hours - (9 * 60 * 60);
+
+            //$s = $hours % 60;
+            $m = floor(($hours % 3600) / 60);
+            $h = floor(($hours % 86400) / 3600);
+            //$d = floor(($hours % 2592000) / 86400);
+            //$M = floor($hours / 2592000);
+
+            return $h . ":" . $m;
+        }
+
+        return '';
     }
 }
