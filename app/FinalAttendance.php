@@ -70,6 +70,7 @@ class FinalAttendance extends Eventable
             DB::raw('CONCAT(\'IN : \', if(isnull(check_in),\'-\', date_format(check_in, \'%l:%i %p\')), "\n", \' OUT : \', if(isnull(check_out),\'-\', date_format(check_out, \'%l:%i %p\'))) as \'title\''),
             DB::raw('kesalahan'),
             DB::raw('tatatertib_flag'),
+            DB::raw('hours'),
             DB::raw('tarikh as \'start\''),
             DB::raw('tarikh as \'end\''),
             DB::raw('\'true\' as \'allDay\''),

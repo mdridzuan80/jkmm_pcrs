@@ -415,8 +415,8 @@
             function exportPDF(result) {
                 try {     
                     var doc = new jsPDF('p', 'pt', 'a4');
-                    var head = [["Tarikh", "Check-In", "Check-Out", "Catatan"]];
-                    var body = result.map((item)=>[moment(item.start).format("DD-MM-YYYY"), (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '', (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '', '']);
+                    var head = [["Tarikh", "Check-In", "Check-Out", "Jam", "Catatan"]];
+                    var body = dataProvider(result);
                     
                     var totalPagesExp = "{total_pages_count_string}";
 
@@ -425,25 +425,38 @@
                         body,
                         theme: 'grid',
                         showHead: 'firstPage',
-                        margin: {top: 80},
+                        margin: {top: 85, bottom: 85},
                         columnStyles: {
-                            0: {cellWidth:1},
-                            1: {cellWidth:1},
-                            2: {cellWidth:1},
-                            3: {cellWidth:'auto'}
+                            1: {halign: "center"},
+                            2: {halign: "center"},
+                            3: {halign: "right"},
+                            4: {cellWidth: 250}
                         },
-                        didParseCell: function(data) {
+                        didParseCell: function(data) {                            
+                            if (data.row.section == 'head') {
+                                data.cell.styles.fillColor = [54, 54, 54];
+                                data.cell.styles.halign = "center";
+
+                                if(data.column.dataKey === '0') {
+                                    data.cell.styles.halign = "left";
+                                }
+
+                                if(data.column.dataKey === '4') {
+                                    data.cell.styles.halign = "left";
+                                }
+                            }
+                      
                             if(moment(result[data.row.index].start).format('d') === '0' || moment(result[data.row.index].start).format('d') === '6' || result[data.row.index].cuti ) {
-                                if (data.row.index === data.row.index) {
+                                if (data.row.section == 'body') {
                                     data.cell.styles.fillColor = [240, 240, 240];
                                 }
                             }
 
                             if (data.row.section === 'body' && data.column.dataKey === '0') {
-                                data.cell.text = moment(result[data.row.index].start).format('DD-MMM-YYYY (ddd)');
+                                data.cell.text = moment(result[data.row.index].start).format('DD (ddd)');
                             }
 
-                            if (data.row.section === 'body' && data.column.dataKey === '3') {
+                            if (data.row.section === 'body' && data.column.dataKey === '4') {
                                 var justifikasi = '';
                                 
                                 if(result[data.row.index].cuti) {
@@ -496,6 +509,11 @@
                             var pageSize = doc.internal.pageSize;
                             var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
                             var pageWidth = doc.internal.pageSize.width ? doc.internal.pageSize.width : doc.internal.pageSize.getWidth();
+                            
+                            doc.text("T/ T PEGAWAI", data.settings.margin.left, pageHeight - 70);
+                            doc.writeText(data.settings.margin.left - 80, pageHeight - 70 , "T/ T KETUA UNIT/ BAHAGIAN", { align: 'right' });
+                            doc.text("Tarikh :", data.settings.margin.left, pageHeight - 40);
+                            doc.writeText(data.settings.margin.left - 175, pageHeight - 40 , "Tarikh :", { align: 'right' });
 
                             doc.text("{{ env('APP_NAME') }}", data.settings.margin.left, pageHeight - 20);
                             doc.text("Dicetak pada : "+moment().format("lll"), data.settings.margin.left, pageHeight - 10, 'left');
@@ -518,6 +536,16 @@
                         type: 'error'
                     });
                 }
+            }
+
+            function dataProvider(result) {
+                return result.map((item)=>[
+                    moment(item.start).format("DD-MM-YYYY"),
+                    (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '',
+                    (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '',
+                    item.jumlah_jam,
+                    ''
+                ]);
             }
         });
     </script>

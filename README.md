@@ -1,6 +1,6 @@
-# eMasa v2
+# Sistem Punctuality Cascading Reporting System (PCRS)
 
-Penambahbaikan sistem eMasa.
+Penambahbaikan Sistem PCRS.
 
 ### Installing
 
@@ -20,4 +20,4 @@ composer install --no-dev
 
 ## Built With
 
-* [Laravel](http://www.laravel.com) - The web framework used
+-   [Laravel](http://www.laravel.com) - The web framework used
