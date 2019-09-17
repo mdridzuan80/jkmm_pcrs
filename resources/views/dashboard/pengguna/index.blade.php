@@ -415,7 +415,7 @@
             function exportPDF(result) {
                 try {     
                     var doc = new jsPDF('p', 'pt', 'a4');
-                    var head = [["Tarikh", "Check-In", "Check-Out", "Jam", "Catatan"]];
+                    var head = [["Tarikh", "Masuk", "Keluar", "Jam", "Catatan", "TT"]];
                     var body = dataProvider(result);
                     
                     var totalPagesExp = "{total_pages_count_string}";
@@ -425,12 +425,13 @@
                         body,
                         theme: 'grid',
                         showHead: 'firstPage',
-                        margin: {top: 85, bottom: 85},
+                        margin: {top: 65, bottom: 85},
                         columnStyles: {
-                            1: {halign: "center"},
-                            2: {halign: "center"},
-                            3: {halign: "right"},
-                            4: {cellWidth: 250}
+                            0: {cellWidth: 50, fontSize:9},
+                            1: {halign: "center", fontSize:9},
+                            2: {halign: "center",  fontSize:9},
+                            3: {halign: "center",  fontSize:9},
+                            4: {cellWidth: 250,  fontSize:9}
                         },
                         didParseCell: function(data) {                            
                             if (data.row.section == 'head') {
@@ -483,19 +484,18 @@
                             }
                         },
                         didDrawPage: function (data) {
-                            // Header
-                            doc.setFontSize(16);
-                            doc.setTextColor(40);
-                            doc.setFontStyle('normal');
                             /* if (base64Img) {
                                 doc.addImage(base64Img, 'JPEG', data.settings.margin.left, 15, 10, 10);
                             } */                        
-                            doc.setFontSize(12);
-                            doc.text("LAPORAN KEHADIRAN BULANAN", data.settings.margin.left, 30);
-                            doc.text("Nama : " + "{{ Auth::user()->xtraAnggota->nama }}", data.settings.margin.left, 45);
-                            doc.text("Jabatan/ Bahagian/ Unit : " + "{{ Auth::user()->xtraAnggota->department->deptname }}", data.settings.margin.left, 60);
-                            doc.text("Bulan : " + cal.fullCalendar('getDate').format('MMMM YYYY'), data.settings.margin.left, 75);
+                            doc.setFontSize(9);
+                            doc.setFontStyle('normal');
 
+                            doc.text("LAPORAN KEHADIRAN BULANAN", data.settings.margin.left, 30);
+                            doc.text("Nama : " + "{{ Auth::user()->xtraAnggota->nama }}", data.settings.margin.left, 40);
+                            doc.text("Jabatan/ Bahagian/ Unit : " + "{{ Auth::user()->xtraAnggota->department->deptname }}", data.settings.margin.left, 50);
+                            doc.text("Bulan : " + cal.fullCalendar('getDate').format('MMMM YYYY'), data.settings.margin.left, 60);
+
+                            doc.setFontSize(9);
                             // Footer
                             var str = "Muka " + doc.internal.getNumberOfPages()
 
@@ -503,6 +503,7 @@
                             if (typeof doc.putTotalPages === 'function') {
                                 str = str + " drp " + totalPagesExp;
                             }
+
                             doc.setFontSize(9);
 
                             // jsPDF 1.4+ uses getWidth, <1.4 uses .width
@@ -544,6 +545,7 @@
                     (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '',
                     (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '',
                     item.jumlah_jam,
+                    '',
                     ''
                 ]);
             }

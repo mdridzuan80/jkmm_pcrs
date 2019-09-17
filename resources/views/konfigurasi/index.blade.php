@@ -108,7 +108,18 @@
                             <tbody>
                                 <tr>
                                     <td class="col-md-3"><b>NAMA WAKTU BERPERINGKAT</b></td>
-                                    <td><input class="form-control" type="text" name="txtPerihal" placeholder="Perihal" value="" required></td>
+                                    <td>
+                                        <input class="form-control" type="text" name="txtPerihal" placeholder="Perihal" autocomplete="off" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-3"><b>FLEKSI</b></td>
+                                    <td>
+                                        <select id="comFleksi" class="form-control" name="comFleksi" required="">
+                                        <option value="YA">YA</option>
+                                        <option value="TIDAK">TIDAK</option>
+                                    </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><b>WAKTU MULA</b></td>
