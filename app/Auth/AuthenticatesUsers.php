@@ -167,7 +167,7 @@ trait AuthenticatesUsers
      */
     public function logout(Request $request)
     {
-        $this->guard('')->logout();
+        $this->guard()->logout();
         $this->guard('ldap')->logout();
 
         $request->session()->invalidate();
@@ -191,7 +191,7 @@ trait AuthenticatesUsers
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function guard($domain)
+    protected function guard($domain = null)
     {
         return AuthFacade::guard($domain);
     }
