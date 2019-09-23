@@ -95,9 +95,7 @@ class Anggota extends BaseModel implements Flowable
     {
         $related = [];
         $effectedDept = Auth::user()->roles()->where('key', Auth::user()->perananSemasa()->key)->get()->map(function ($item, $key) {
-            return $item->departments->map(function ($item, $key) {
-                return $item->deptid;
-            });
+            return $item->pivot->department_id;
         })->flatten()->unique()->toArray();
 
         foreach ($effectedDept as $dept) {
