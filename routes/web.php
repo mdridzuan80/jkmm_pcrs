@@ -18,7 +18,6 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::middleware('auth:internal,ldap')->group(function () {
     Route::get('/', 'KalendarController@index');
 
-    Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/dashboard', 'KalendarController@index')->name('dashboard');
     Route::get('/kalendar', 'KalendarController@index')->name('kalendar');
 

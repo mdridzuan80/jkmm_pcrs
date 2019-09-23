@@ -2,6 +2,7 @@
 
 namespace App\Base;
 
+use App;
 use App\Http\Controllers\Controller;
 
 class BaseController extends Controller
@@ -19,6 +20,10 @@ class BaseController extends Controller
 
     protected function getControllerAction()
     {
+        if (App::runningInConsole()) {
+            return null;
+        }
+
         $routeArray = app('request')->route()->getAction();
         $controllerAction = class_basename($routeArray['controller']);
 
