@@ -464,6 +464,29 @@
                                     justifikasi += "Cuti Umum : " + result[data.row.index].cuti.perihal + "\n";
                                 }
 
+                                if(result[data.row.index].tatatertib_flag === 'TS') {
+                                    var kesalahan = JSON.parse(result[data.row.index].kesalahan);
+
+                                    justifikasi += "Kesalahan : \n";
+
+                                    kesalahan.forEach(function(item, index) {
+                                        switch(item) {
+                                            case 'NONEIN':
+                                                justifikasi += "\tPagi : Tiada rekod\n";
+                                            break;
+                                            case 'LEWAT':
+                                                justifikasi += "\tPagi : Lewat\n";
+                                            break;
+                                            case 'NONEOUT':
+                                                justifikasi += "\tPetang : Tiada rekod\n";
+                                            break;
+                                            case 'AWAL':
+                                                justifikasi += "\tPetang : Pulang awal\n";
+                                            break;
+                                        }
+                                    });                                    
+                                }
+
                                 if(result[data.row.index].justifikasi) {
                                     result[data.row.index].justifikasi.forEach(function(item, index) {
                                         if(index === 0 && item.flag_kelulusan === 'LULUS') {
@@ -517,7 +540,7 @@
                             doc.writeText(data.settings.margin.left - 175, pageHeight - 40 , "Tarikh :", { align: 'right' });
 
                             doc.text("{{ env('APP_NAME') }}", data.settings.margin.left, pageHeight - 20);
-                            doc.text("Dicetak pada : "+moment().format("lll"), data.settings.margin.left, pageHeight - 10, 'left');
+                            doc.text("Dicetak pada : "+moment().format("lll")+", Oleh : {{(Auth::user()->xtraAnggota) ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}", data.settings.margin.left, pageHeight - 10, 'left');
                             doc.writeText(data.settings.margin.left + 20, pageHeight - 10 ,str, { align: 'right' });
                         }
                     });
