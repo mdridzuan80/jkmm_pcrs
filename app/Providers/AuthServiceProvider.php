@@ -8,7 +8,6 @@ use App\Auth\PcrsUserProvider;
 use App\Auth\LdapUserProvider;
 use App\Auth\MohrUserProvider;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider

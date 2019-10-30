@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@inject('Justifikasi', 'App\Justifikasi')
+@inject('Justifikasi', 'App\Repositories\Justifikasi')
 
 @section('content')
     <section class="content-header">
@@ -37,6 +37,23 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                         <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="modal-default-catatan" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: steelblue; color: white;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH CATATAN</h4>
                     </div>
                     <div class="modal-body">
                         <h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>
@@ -100,12 +117,18 @@
                 firstDay: 1,
                 showNonCurrentDates: false,
                 customButtons: {
-                    /*aktiviti: {
-                        text: 'Tambah Aktiviti',
+                    timeslip: {
+                        text: 'Timeslip',
                         click: function() {
                             $('#modal-default').modal({backdrop: 'static',});
                         }
-                    },*/
+                    },
+                    catatan: {
+                        text: 'Catatan',
+                        click: function() {
+                            $('#modal-default-catatan').modal({backdrop: 'static',});
+                        }
+                    },
                     laporan: {
                         text: 'Laporan Bulanan',
                         click: function() {
@@ -116,7 +139,7 @@
                     }
                 },
                 header: {
-                    right: 'laporan aktiviti prev,today,next'
+                    right: 'laporan timeslip prev,today,next'
                 },
                 dayClick: function(date, jsEvent, view) {
                     var modal = $('#modal-acara-anggota');
@@ -175,8 +198,8 @@
                         $("#txtMasaTamat").on("dp.change", function (e) {
                             var duration = moment.duration(moment(e.date.format('YYYY-MM-DD HH:mm:00.000')).diff(acara.masaMula));
                             duration = duration.asHours();
-
-                            if (acara.jenisAcara == '{{ \App\Acara::JENIS_ACARA_TIDAK_RASMI}}' && duration > 4)
+                            
+                            if (acara.jenisAcara == '{{ \App\Acara::KATEGORI_TIMESLIP}}' && duration > 4)
                             {
                                 e.target.value = '';
                                 alert('Tempoh masa lebih 4 jam');
@@ -415,7 +438,7 @@
             function exportPDF(result) {
                 try {     
                     var doc = new jsPDF('p', 'pt', 'a4');
-                    var head = [["Tarikh", "Masuk", "Keluar", "Jam", "Catatan", "TT"]];
+                    var head = [["Tarikh", "Masuk", "Keluar", "Jam", "Kesalahan", "Catatan", "TT"]];
                     var body = dataProvider(result);
                     
                     var totalPagesExp = "{total_pages_count_string}";
@@ -431,7 +454,8 @@
                             1: {halign: "center", fontSize:9},
                             2: {halign: "center",  fontSize:9},
                             3: {halign: "center",  fontSize:9},
-                            4: {cellWidth: 250,  fontSize:9}
+                            4: {cellWidth: 80,  fontSize:9},
+                            5: {cellWidth: 170,  fontSize:9}
                         },
                         didParseCell: function(data) {                            
                             if (data.row.section == 'head') {
@@ -460,45 +484,51 @@
                             if (data.row.section === 'body' && data.column.dataKey === '4') {
                                 var justifikasi = '';
                                 
-                                if(result[data.row.index].cuti) {
-                                    justifikasi += "Cuti Umum : " + result[data.row.index].cuti.perihal + "\n";
-                                }
-
                                 if(result[data.row.index].tatatertib_flag === 'TS') {
                                     var kesalahan = JSON.parse(result[data.row.index].kesalahan);
-
-                                    justifikasi += "Kesalahan : \n";
 
                                     kesalahan.forEach(function(item, index) {
                                         switch(item) {
                                             case 'NONEIN':
-                                                justifikasi += "\tPagi : Tiada rekod\n";
+                                                justifikasi += "Pg : Tiada rekod\n";
                                             break;
                                             case 'LEWAT':
-                                                justifikasi += "\tPagi : Lewat\n";
+                                                justifikasi += "Pg : Hadir lewat\n";
                                             break;
                                             case 'NONEOUT':
-                                                justifikasi += "\tPetang : Tiada rekod\n";
+                                                justifikasi += "Ptg : Tiada rekod\n";
                                             break;
                                             case 'AWAL':
-                                                justifikasi += "\tPetang : Pulang awal\n";
+                                                justifikasi += "Ptg : Pulang awal\n";
                                             break;
                                         }
                                     });                                    
                                 }
 
+                                data.cell.text = justifikasi;
+                            }
+
+                            if (data.row.section === 'body' && data.column.dataKey === '5') {
+                                var justifikasi = '';
+                                
+                                if(result[data.row.index].cuti) {
+                                    justifikasi += "Cuti Umum : " + result[data.row.index].cuti.perihal + "\n";
+                                }
+
                                 if(result[data.row.index].justifikasi) {
                                     result[data.row.index].justifikasi.forEach(function(item, index) {
-                                        if(index === 0 && item.flag_kelulusan === 'LULUS') {
+                                        //if(index === 0 && item.flag_kelulusan === 'LULUS') {
+                                        if(index === 0) {
                                             if(item.flag_justifikasi === 'SAMA') {
-                                                justifikasi += "Justifikasi : " + item.keterangan + "\n";
+                                                justifikasi += "J : " + item.keterangan + "\n";
                                             } else {
-                                                justifikasi += "Justifikasi Pagi : " + item.keterangan + "\n";
+                                                justifikasi += "JPG : " + item.keterangan + "\n";
                                             }
                                         }
 
-                                        if(index === 1 && item.flag_kelulusan === 'LULUS' && item.flag_justifikasi === 'XSAMA') {
-                                            justifikasi += "Justifikasi Petang : " + item.keterangan + "\n";
+                                        //if(index === 1 && item.flag_kelulusan === 'LULUS' && item.flag_justifikasi === 'XSAMA') {
+                                        if(index === 1 && item.flag_justifikasi === 'XSAMA') {
+                                            justifikasi += "JPTG : " + item.keterangan + "\n";
                                         }
                                     });
                                 }

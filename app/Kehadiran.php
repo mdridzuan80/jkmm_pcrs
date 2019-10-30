@@ -5,12 +5,9 @@ namespace App;
 use DB;
 use Carbon\Carbon;
 use App\Abstraction\Eventable;
-use CoenJacobs\EloquentCompositePrimaryKeys\HasCompositePrimaryKey;
 
 class Kehadiran extends Eventable
 {
-    use HasCompositePrimaryKey;
-
     const PUNCH_IN = "IN";
     const PUNCH_OUT = "OUT";
     const PUNCH_MIN = "MIN";
@@ -64,11 +61,11 @@ class Kehadiran extends Eventable
     public static function itemEventableNone()
     {
         return [
-            'title' => 'IN: -' . "\n" . 'OUT: -',
+            'title' => 'IN: -',
             'start' => today()->toDateTimeString(),
             'end' => today()->toDateTimeString(),
             'allDay' => 'true',
-            'color' => '#1abc9c',
+            'color' => '#dcf442',
             'textColor' => '#000',
             'id' => 0,
             'table_name' => 'current'

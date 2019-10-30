@@ -3,36 +3,8 @@
         <table class="table table-bordered">
             <tbody>
                 <tr>
-                    <td class="col-md-3"><b>JENIS</b></td>
-                    <td>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <table style="width: 100%">
-                                <tr>
-                                    <td>
-                                        <div class="radio" style="margin: 0;">
-                                            <label>
-                                            <input type="radio" name="jenis_acara" value="{{ \App\Acara::JENIS_ACARA_RASMI}}" required>
-                                            Rasmi
-                                            </label>
-                                            
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="radio" style="margin: 0;">
-                                            <label>
-                                            <input type="radio" name="jenis_acara" value="{{ \App\Acara::JENIS_ACARA_TIDAK_RASMI}}" required>
-                                            Tidak Rasmi
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
                     <td class="col-md-3"><b>PERKARA</b></td>
-                    <td><input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required></td>
+                    <td><input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required autocomplete="off"></td>
                 </tr>
                 <tr>
                     <td><b>MASA</b></td>
@@ -40,10 +12,10 @@
                         <table style="width: 100%">
                             <tr>
                                 <td style="padding-right: 5px">
-                                    <input id="txtMasaMula" class="form-control" type="text" name="txtMasaMula" placeholder="Masa Mula"  required>
+                                    <input id="txtMasaMula" class="form-control" type="text" name="txtMasaMula" placeholder="Masa Mula"  required autocomplete="off">
                                 </td>
                                 <td>
-                                    <input id="txtMasaTamat" class="form-control" type="text" name="txtMasaTamat" placeholder="Masa Tamat"  required>
+                                    <input id="txtMasaTamat" class="form-control" type="text" name="txtMasaTamat" placeholder="Masa Tamat"  required autocomplete="off">
                                 </td>
                             </tr>
                         </table>
@@ -51,7 +23,7 @@
                 </tr>
                 <tr>
                     <td><b>KETERANGAN</b></td>
-                    <td><textarea id="txtKeterangan" class="form-control" rows="3" name="txtKeterangan" placeholder="Perkara..." required></textarea></td>
+                    <td><textarea id="txtKeterangan" class="form-control" rows="3" name="txtKeterangan" placeholder="Perkara..." required autocomplete="off"></textarea></td>
                 </tr>
             </body>
         </table>

@@ -42,7 +42,7 @@ class FinalAttendance extends Eventable
 
     public function justifikasi()
     {
-        return $this->hasMany(Justifikasi::class, 'final_attendance_id');
+        return $this->hasMany(Acara::class, 'final_attendance_id');
     }
 
     public function anggota()

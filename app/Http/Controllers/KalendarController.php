@@ -28,7 +28,6 @@ class KalendarController extends BaseController
             'cuti',
             'kehadiran',
             'finalKehadiran',
-            'acara',
         ];
 
         parent::__construct();
@@ -45,13 +44,24 @@ class KalendarController extends BaseController
 
     public function rpcEventAnggotaIndex(Anggota $profil, Request $request, Manager $fractal, Event $event)
     {
-        $checkinout = collect(($profil->finalKehadiran()->events()->getEventBetween([$request->input('start'), $request->input('end')])->get())->load('cuti')->toArray());
+        $checkinout = collect(
+            ($profil->finalKehadiran()->events()->getEventBetween([
+                $request->input('start'),
+                $request->input('end')
+            ])->get())->load('cuti')->toArray()
+        );
         $cuti = Cuti::events()->getEventBetween([$request->input('start'), $request->input('end')])->get()->toArray();
         $acara = $profil->acara()->events()->getByDateRange($request->input('start'), $request->input('end'))->get();
 
         $events = $checkinout->merge($cuti)->merge($acara);
+        $startTime = today()->addHours(4);
+        $endTime = today()->addHours(13);
+        $checkIn = optional(
+            $profil->kehadiran()->events()
+                ->whereBetween('CHECKTIME', [$startTime, $endTime])->first()
+        )->toArray();
 
-        if ($checkIn = optional($profil->kehadiran()->events()->whereBetween('CHECKTIME', [today()->addHours(4), today()->addHours(13)])->first())->toArray()) {
+        if ($checkIn) {
             $events = $events->push($checkIn);
         } else {
             $events->push(Kehadiran::itemEventableNone());
@@ -70,13 +80,16 @@ class KalendarController extends BaseController
 
     public function rpcEventAnggotaStore(Anggota $profil, StoreAcaraRequest $request, Manager $fractal, Event $event)
     {
-        return response()->json($fractal->createData(new Item(Acara::storeAcara($profil, $request)->eventableItem(), $event))->toArray());
+        $acara = Acara::storeAcara($profil, $request)->eventableItem();
+        $manager = $fractal->createData(new Item($acara, $event));
+        return response()->json($manager)->toArray();
     }
 
     public function rpcEventAnggotaShow(Anggota $profil, $acaraId, $jenisSumber)
     {
-        if ($jenisSumber !== Eventable::CURRENTATT)
+        if ($jenisSumber !== Eventable::CURRENTATT) {
             $event = $this->_eventable[$jenisSumber]::events()->findOrFail($acaraId);
+        }
 
         if ($jenisSumber === Eventable::CURRENTATT) {
             $jenisSumber = Eventable::FINALATT;

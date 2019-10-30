@@ -5,7 +5,7 @@ namespace App\Transformers;
 use App\Utility;
 use App\Kehadiran;
 use Carbon\Carbon;
-use App\Justifikasi;
+use App\Repositories\Justifikasi;
 use League\Fractal\TransformerAbstract;
 
 class Event extends TransformerAbstract
@@ -60,7 +60,12 @@ class Event extends TransformerAbstract
     private function getTitle()
     {
         if ($this->event['table_name'] == 'final') {
-            $checkin = $this->subTitleCheckin($this->chkJustifikasiStatusIcon($this->event['justifikasi'], Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI));
+            $checkin = $this->subTitleCheckin(
+                $this->chkJustifikasiStatusIcon(
+                    $this->event['justifikasi'],
+                    Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI
+                )
+            );
             $checkout = $this->subTitleCheckout($this->chkJustifikasiStatusIcon($this->event['justifikasi'], Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG));
 
             return $checkin . $checkout;
@@ -74,7 +79,9 @@ class Event extends TransformerAbstract
         if ($this->event['tatatertib_flag'] == Kehadiran::FLAG_TATATERTIB_TUNJUK_SEBAB && !$this->event['cuti']) {
             if ($this->event['check_in']) {
                 if (Utility::kesalahanCheckIn($this->event['kesalahan']) == Kehadiran::FLAG_KESALAHAN_LEWAT) {
-                    return $this->startTag . '<img src="' . $icon . '"/>IN:' . Carbon::parse($this->event['check_in'])->format('g:i:s A') . $this->endTag;
+                    return $this->startTag . '<img src="' . $icon . '"/>IN:' . Carbon::parse(
+                        $this->event['check_in']
+                    )->format('g:i:s A') . $this->endTag;
                 } else {
                     return $this->startTag . 'IN:' . Carbon::parse($this->event['check_in'])->format('g:i:s A') . $this->endTag;
                 }
@@ -123,11 +130,11 @@ class Event extends TransformerAbstract
             $justifikasi = $justifikasi->where('medan_kesalahan', $medan)->first();
 
             if ($justifikasi) {
-                return asset(Self::FLAG_KELULUSAN_ICON[$justifikasi['flag_kelulusan']]);
+                return asset(self::FLAG_KELULUSAN_ICON[$justifikasi['flag_kelulusan']]);
             }
         }
 
-        return asset(Self::FLAG_KELULUSAN_ICON['DEFAULT']);
+        return asset(self::FLAG_KELULUSAN_ICON['DEFAULT']);
     }
 
     private function totalHour($hours)

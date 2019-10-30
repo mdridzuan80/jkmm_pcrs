@@ -59,8 +59,8 @@
       </div>
       <div class="form-group">
         <select class="form-control" name="domain" required>
-            <option value="internal" {{ (old('domain') === 'internal') ? 'selected':'' }} >INTERNAL</option>
             <option value="ldap" {{ (old('domain') === 'melaka.gov') ? 'selected':'' }} >MELAKA.GOV</option>
+            <option value="internal" {{ (old('domain') === 'internal') ? 'selected':'' }} >INTERNAL</option>
         </select>
       </div>
       <div class="row">

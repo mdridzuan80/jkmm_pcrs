@@ -1,6 +1,6 @@
 @inject('Utility', 'App\Utility')
 @inject('Kehadiran', 'App\Kehadiran')
-@inject('Justifikasi', 'App\Justifikasi')
+@inject('Justifikasi', 'App\Repositories\Justifikasi')
 
 <div class="table-responsive">
     @foreach ($events as $event)

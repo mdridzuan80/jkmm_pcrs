@@ -381,7 +381,7 @@
                             </tr>
                             <tr>
                                 <td>Tarikh :</td>
-                                <td>{{ $justifikasi->tarikh->format('l, d F Y') }}</td>
+                                <td>{{ $justifikasi->tarikh_mula->format('l, d F Y') }}</td>
                             </tr>
                             @if ($justifikasi->flag_justifikasi == $Justifikasi::FLAG_JUSTIKASI_TIDAK_SAMA)
                                 <tr>
