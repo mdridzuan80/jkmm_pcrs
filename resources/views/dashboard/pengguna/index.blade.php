@@ -139,7 +139,7 @@
                     }
                 },
                 header: {
-                    right: 'laporan timeslip prev,today,next'
+                    right: 'timeslip catatan laporan  prev,today,next'
                 },
                 dayClick: function(date, jsEvent, view) {
                     var modal = $('#modal-acara-anggota');
@@ -199,7 +199,7 @@
                             var duration = moment.duration(moment(e.date.format('YYYY-MM-DD HH:mm:00.000')).diff(acara.masaMula));
                             duration = duration.asHours();
                             
-                            if (acara.jenisAcara == '{{ \App\Acara::KATEGORI_TIMESLIP}}' && duration > 4)
+                            if (duration >= 4)
                             {
                                 e.target.value = '';
                                 alert('Tempoh masa lebih 4 jam');
@@ -341,6 +341,44 @@
                 var tkhSemasaView = cal.fullCalendar('getDate');
                 var bulan = tkhSemasaView.format('MM');
                 var tahun = tkhSemasaView.format('YYYY');
+            });
+
+            
+            $('#modal-default-catatan').on('show.bs.modal', function(e) {
+                var modalBody = $(this).find('.modal-body');
+
+                $.ajax({
+                    url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create',
+                    success: function(data, textStatus, jqXHR) {
+                        modalBody.html(data);
+                        $('#txtMasaMula').datetimepicker({
+                            format: 'DD/MM/YYYY h:mm A'
+                        });
+                        $('#txtMasaTamat').datetimepicker({
+                            useCurrent: false, //Important! See issue #1075
+                            format: 'DD/MM/YYYY h:mm A'
+                        });
+                        $("#txtMasaMula").on("dp.change", function (e) {
+                            acara.masaMula = e.date.format('YYYY-MM-DD HH:mm:00.000');
+                            $('#txtMasaTamat').data("DateTimePicker").minDate(e.date);
+                        });
+
+                        /* $("#txtMasaTamat").on("dp.change", function (e) {
+                            var duration = moment.duration(moment(e.date.format('YYYY-MM-DD HH:mm:00.000')).diff(acara.masaMula));
+                            duration = duration.asHours();
+                            
+                            if (duration > 4)
+                            {
+                                e.target.value = '';
+                                alert('Tempoh masa lebih 4 jam');
+                                return;
+                            }
+
+                            acara.masaTamat = e.date.format('YYYY-MM-DD HH:mm:00.000');
+                            $('#txtMasaMula').data("DateTimePicker").maxDate(e.date);
+                        }); */
+                    },
+                });
             });
 
             function disableFormComponentPetang(status) {
