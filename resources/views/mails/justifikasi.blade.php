@@ -1,4 +1,4 @@
-@inject('Justifikasi', '\App\Justifikasi')
+@inject('Justifikasi', '\App\Repositories\Justifikasi')
 
 <!doctype html>
 <html>
