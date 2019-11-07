@@ -23,8 +23,9 @@ class FinalAttendanceService
 
     public function tarikhTamat($tkhTamat)
     {
-        if ($tkhTamat->lt(Carbon::now()))
+        if ($tkhTamat->lt(Carbon::now())) {
             return $tkhTamat;
+        }
 
         return Carbon::now()->subDays(1);
     }
