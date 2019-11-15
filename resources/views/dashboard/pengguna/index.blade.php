@@ -250,6 +250,7 @@
                     allowOutsideClick: () => !swal.isLoading(),
                     preConfirm: () => {
                         return new Promise((resolve,reject) => {
+                            acara.jenisAcara = e.target.hddJenisAcara.value;
                             $.ajax({
                                 method: 'POST',
                                 data: acara,
@@ -378,6 +379,57 @@
                             $('#txtMasaMula').data("DateTimePicker").maxDate(e.date);
                         }); */
                     },
+                });
+            });
+
+            $('#modal-default-catatan').on('submit', '#frm-acara', function(e) {
+                e.preventDefault();
+
+                swal({
+                    title: 'Amaran!',
+                    text: 'Anda pasti untuk menambah acara ini?',
+                    type: 'warning',
+                    cancelButtonText: 'Tidak',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya!',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: () => !swal.isLoading(),
+                    preConfirm: () => {
+                        return new Promise((resolve,reject) => {
+                            acara.jenisAcara = e.target.hddJenisAcara.value;
+                            $.ajax({
+                                method: 'POST',
+                                data: acara,
+                                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara',
+                                success: function(acara, extStatus, jqXHR) {
+                                    resolve({'acara': acara.data});
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) {
+                                    reject(textStatus);
+                                },
+                                statusCode: login()
+                            });
+                        });
+                    }
+                }).then((result) => {
+                    console.log(result.value);
+                    if (result.value) {
+                        //cal.fullCalendar('refetchEvents');
+                        cal.fullCalendar( 'renderEvent', result.value.acara);
+                        $('#modal-default').modal('hide');
+
+                        swal({
+                            title: 'Berjaya!',
+                            text: 'Maklumat telah disimpan',
+                            type: 'success'
+                        });
+                    }
+                }).catch((error) => {
+                    swal({
+                        title: 'Ralat!',
+                        text: "Operasi tidak berjaya!.\nSila berhubung dengan Pentadbir sistem",
+                        type: 'error'
+                    });
                 });
             });
 

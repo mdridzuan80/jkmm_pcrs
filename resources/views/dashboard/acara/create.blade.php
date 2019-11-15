@@ -1,5 +1,7 @@
+@inject('Acara', 'App\Acara')
 <div class="table-responsive">
     <form id="frm-acara">
+        <input type="hidden" name="hddJenisAcara" value="{{ $Acara::KATEGORI_TIMESLIP }}">
         <table class="table table-bordered">
             <tbody>
                 <tr>

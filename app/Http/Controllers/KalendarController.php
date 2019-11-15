@@ -82,7 +82,7 @@ class KalendarController extends BaseController
     {
         $acara = Acara::storeAcara($profil, $request)->eventableItem();
         $manager = $fractal->createData(new Item($acara, $event));
-        return response()->json($manager)->toArray();
+        return response()->json($manager->toArray());
     }
 
     public function rpcEventAnggotaShow(Anggota $profil, $acaraId, $jenisSumber)
