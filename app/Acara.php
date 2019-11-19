@@ -37,6 +37,7 @@ class Acara extends Eventable
     public function scopeEvents($query)
     {
         return $query->select(
+            DB::raw('kategori'),
             DB::raw('perkara as \'title\''),
             DB::raw('tarikh_mula as \'start\''),
             DB::raw('tarikh_tamat as \'end\''),
@@ -102,5 +103,18 @@ class Acara extends Eventable
             'id' => $this->id,
             'table_name' => 'acara'
         ]);
+    }
+
+    public function descKategori()
+    {
+        if ($this->kategori === self::KATEGORI_JUSTIFIKASI) {
+            return 'justifikasi';
+        }
+        if ($this->kategori === self::KATEGORI_TIMESLIP) {
+            return 'timeslip';
+        }
+        if ($this->kategori === self::KATEGORI_CATATAN) {
+            return 'catatan';
+        }
     }
 }

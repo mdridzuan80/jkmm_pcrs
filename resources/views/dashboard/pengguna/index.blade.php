@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @inject('Justifikasi', 'App\Repositories\Justifikasi')
+@inject('Acara', 'App\Acara')
 
 @section('content')
     <section class="content-header">
@@ -236,6 +237,19 @@
                 acara.keterangan = e.target.value;
             });
 
+            $('#modal-default-catatan').on('keyup', '#txtPerkara', function(e) {
+                acara.perkara = e.target.value;
+                if(! e.target.value) {
+                    return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA');
+                }
+
+                return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar"></i>' + e.target.value.toUpperCase());
+            });
+
+            $('#modal-default-catatan').on('change', '#txtKeterangan', function(e) {
+                acara.keterangan = e.target.value;
+            });
+
             $('#modal-default').on('submit', '#frm-acara', function(e) {
                 e.preventDefault();
 
@@ -250,7 +264,7 @@
                     allowOutsideClick: () => !swal.isLoading(),
                     preConfirm: () => {
                         return new Promise((resolve,reject) => {
-                            acara.jenisAcara = e.target.hddJenisAcara.value;
+                            acara.jenisAcara = '{{ $Acara::KATEGORI_TIMESLIP }}';
                             $.ajax({
                                 method: 'POST',
                                 data: acara,
@@ -364,20 +378,10 @@
                             $('#txtMasaTamat').data("DateTimePicker").minDate(e.date);
                         });
 
-                        /* $("#txtMasaTamat").on("dp.change", function (e) {
-                            var duration = moment.duration(moment(e.date.format('YYYY-MM-DD HH:mm:00.000')).diff(acara.masaMula));
-                            duration = duration.asHours();
-                            
-                            if (duration > 4)
-                            {
-                                e.target.value = '';
-                                alert('Tempoh masa lebih 4 jam');
-                                return;
-                            }
-
+                        $("#txtMasaTamat").on("dp.change", function (e) {
                             acara.masaTamat = e.date.format('YYYY-MM-DD HH:mm:00.000');
                             $('#txtMasaMula').data("DateTimePicker").maxDate(e.date);
-                        }); */
+                        });
                     },
                 });
             });
@@ -396,7 +400,7 @@
                     allowOutsideClick: () => !swal.isLoading(),
                     preConfirm: () => {
                         return new Promise((resolve,reject) => {
-                            acara.jenisAcara = e.target.hddJenisAcara.value;
+                            acara.jenisAcara = '{{ $Acara::KATEGORI_CATATAN }}';
                             $.ajax({
                                 method: 'POST',
                                 data: acara,
@@ -416,7 +420,7 @@
                     if (result.value) {
                         //cal.fullCalendar('refetchEvents');
                         cal.fullCalendar( 'renderEvent', result.value.acara);
-                        $('#modal-default').modal('hide');
+                        $('#modal-default-catatan').modal('hide');
 
                         swal({
                             title: 'Berjaya!',

@@ -28,6 +28,7 @@ class KalendarController extends BaseController
             'cuti',
             'kehadiran',
             'finalKehadiran',
+            'acara',
         ];
 
         parent::__construct();
