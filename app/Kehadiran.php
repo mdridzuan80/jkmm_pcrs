@@ -5,12 +5,9 @@ namespace App;
 use DB;
 use Carbon\Carbon;
 use App\Abstraction\Eventable;
-use CoenJacobs\EloquentCompositePrimaryKeys\HasCompositePrimaryKey;
 
 class Kehadiran extends Eventable
 {
-    use HasCompositePrimaryKey;
-
     const PUNCH_IN = "IN";
     const PUNCH_OUT = "OUT";
     const PUNCH_MIN = "MIN";

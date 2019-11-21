@@ -187,7 +187,7 @@ class FinalAttendanceService
         }
 
         if ($this->isLate($checkIn, $shift)) {
-            return Kehadiran::FLAG_KESALAHAN_LEWAT;;
+            return Kehadiran::FLAG_KESALAHAN_LEWAT;
         }
 
         return Kehadiran::FLAG_KESALAHAN_NONE;
@@ -240,7 +240,7 @@ class FinalAttendanceService
 
     public function isEarly($check_in, $check_out, $shift)
     {
-        $rulePunchIn = Carbon::parse($check_out->toDateString() . " " . $shift->check_in->toTimeString());
+        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . $shift->check_in->toTimeString());
         $rulePunchOut = Carbon::parse($check_out->toDateString() . " " . $shift->check_out->toTimeString());
 
         if (!$check_in || $this->statusLewat) {
