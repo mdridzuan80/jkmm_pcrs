@@ -1,5 +1,5 @@
 @inject('Utility', 'App\Utility')
-@inject('Justifikasi', 'App\Justifikasi')
+@inject('Acara', 'App\Acara')
 
 @extends('layouts.master')
 @php
@@ -41,7 +41,7 @@
                                 <td><div class="icheckbox_flat-blue" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
                                 <td class="mailbox-name">{{ $justifikasi->finalAttendance->anggota->nama }}</td>
                                 <td class="mailbox-subject">
-                                  <b>[{{ $justifikasi->tarikh->format('d-M-Y') }} - {{ $justifikasi->medan_kesalahan }}, {{ $Utility::kesalahan($justifikasi->medan_kesalahan, $justifikasi->finalAttendance->kesalahan) }}]</b> - <span>{{$justifikasi->keterangan}}</span>
+                                  <b>[{{ $justifikasi->tarikh_mula->format('d-M-Y') }} - {{ $justifikasi->medan_kesalahan }}, {{ $Utility::kesalahan($justifikasi->medan_kesalahan, $justifikasi->finalAttendance->kesalahan) }}]</b> - <span>{{$justifikasi->keterangan}}</span>
                                 </td>
                                 <td class="mailbox-date">{{ $justifikasi->created_at->diffForHumans() }}</td>
                                 <td class="mailbox-date">
@@ -72,13 +72,13 @@
     $(".btn-lulus").on('click', function(e){
       e.preventDefault();
       
-      kelulusan(this,'{{ $Justifikasi::FLAG_KELULUSAN_LULUS }}')
+      kelulusan(this,'{{ $Acara::STATUS_PERMOHONAN_LULUS }}')
     });
 
     $(".btn-tolak").on('click', function(e){
       e.preventDefault();
       
-      kelulusan(this,'{{ $Justifikasi::FLAG_KELULUSAN_TOLAK }}')
+      kelulusan(this,'{{ $Acara::STATUS_PERMOHONAN_TOLAK }}')
     });
 
     function kelulusan(el,status) {

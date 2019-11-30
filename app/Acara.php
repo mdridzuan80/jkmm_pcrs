@@ -15,6 +15,8 @@ class Acara extends Eventable
     protected $dates = [
         'tarikh_mula',
         'tarikh_tamat',
+        'created_at',
+        'updated_at',
     ];
 
     const JENIS_ACARA_CHECKIN = 'IN';
@@ -32,6 +34,11 @@ class Acara extends Eventable
     public function __construct()
     {
         $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
+
+    public function finalAttendance()
+    {
+        return $this->belongsTo(FinalAttendance::class);
     }
 
     public function scopeEvents($query)

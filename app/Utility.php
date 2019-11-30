@@ -2,15 +2,14 @@
 
 namespace App;
 
-use App\Kehadiran;
-use App\Justifikasi;
+use App\Repositories\Justifikasi;
 use Illuminate\Support\Collection;
 
 class Utility
 {
     public static function pcrsListerDepartment($SubDepartmentOption, $departmentId)
     {
-        return ($SubDepartmentOption == 'true') ? implode(',', array_flatten(SELF::pcrsRelatedDepartment(Department::all(), $departmentId))) : $departmentId;
+        return ($SubDepartmentOption == 'true') ? implode(',', array_flatten(self::pcrsRelatedDepartment(Department::all(), $departmentId))) : $departmentId;
     }
 
     public static function pcrsRelatedDepartment(Collection $elements, $parentId = 1)
@@ -20,7 +19,7 @@ class Utility
         foreach ($elements as $element) {
             if ((int) $element->supdeptid === (int) $parentId) {
                 $branch[] = $element->deptid;
-                $c = SELF::pcrsRelatedDepartment($elements, $element->deptid);
+                $c = self::pcrsRelatedDepartment($elements, $element->deptid);
                 if ($c) {
                     $branch[] = $c;
                 }
