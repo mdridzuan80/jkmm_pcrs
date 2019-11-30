@@ -67,19 +67,19 @@ class XtraAnggota extends Model
 
     public function pemohonJustifikasi()
     {
-        return $this->hasMany(Justifikasi::class, 'pelulus_id');
+        return $this->hasMany(Acara::class, 'pelulus_id');
     }
 
     //----End Relationship-----
 
     public function scopeKelulusanJustifikasi()
     {
-        return $this->pemohonJustifikasi()->where('flag_kelulusan', Justifikasi::FLAG_KELULUSAN_MOHON)->with('finalAttendance.anggota');
+        return $this->pemohonJustifikasi()->where('flag_kelulusan', Acara::STATUS_PERMOHONAN_MOHON)->with('finalAttendance.anggota');
     }
 
     public static function setupXtra($profil, User $user)
     {
-        $xtra = Self::updateOrCreate(
+        $xtra = self::updateOrCreate(
             ['anggota_id' => $user->anggota_id, 'email' => $profil->email],
             [
                 'nama' => $profil->name,

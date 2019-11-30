@@ -6,9 +6,9 @@ use Auth;
 use Flow;
 use App\Acara;
 use App\Anggota;
-use App\Repositories\Justifikasi;
 use App\Base\BaseController;
 use Illuminate\Http\Request;
+use App\Repositories\Justifikasi;
 use App\Jobs\JustifikasiSendingEmailJob;
 use App\Http\Requests\JustifikasiRequest;
 

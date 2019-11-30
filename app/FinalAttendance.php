@@ -5,12 +5,12 @@ namespace App;
 use DB;
 use Carbon\Carbon;
 use App\Abstraction\Eventable;
-use Awobaz\Compoships\Compoships;
 
+//use Awobaz\Compoships\Compoships;
 
 class FinalAttendance extends Eventable
 {
-    use Compoships;
+    //use Compoships;
 
     protected $fillable = [
         'anggota_id',

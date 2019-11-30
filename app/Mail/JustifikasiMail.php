@@ -18,8 +18,8 @@ class JustifikasiMail extends Mailable
      * @return void
      */
 
-    var $finalAttendance;
-    var $justifikasi;
+    private $finalAttendance;
+    private $justifikasi;
 
     public function __construct($finalattendance_id, $medan_kesalahan)
     {
