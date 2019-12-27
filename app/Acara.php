@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Auth;
+use Illuminate\Auth\AuthManager as Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Abstraction\Eventable;
