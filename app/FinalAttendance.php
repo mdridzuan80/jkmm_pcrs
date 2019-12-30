@@ -2,11 +2,9 @@
 
 namespace App;
 
-use DB;
 use Carbon\Carbon;
 use App\Abstraction\Eventable;
-
-//use Awobaz\Compoships\Compoships;
+use Illuminate\Support\Facades\DB;
 
 class FinalAttendance extends Eventable
 {
@@ -26,7 +24,6 @@ class FinalAttendance extends Eventable
     ];
 
     protected $dates = [
-        'tarikh',
         'check_in',
         'check_out',
         'check_in_mid',
@@ -57,7 +54,7 @@ class FinalAttendance extends Eventable
 
     public function cuti()
     {
-        return $this->belongsTo(Cuti::class, ['tarikh'], ['tarikh']);
+        return $this->belongsTo(Cuti::class, 'tarikh', 'tarikh');
     }
 
     public function scopeEvents($query)

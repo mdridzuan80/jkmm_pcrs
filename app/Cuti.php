@@ -13,9 +13,7 @@ class Cuti extends Eventable
 
     protected $table = 'cuti';
 
-    protected $dates = [
-        'tarikh',
-    ];
+    protected $dates = [];
 
     public function __construct()
     {

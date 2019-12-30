@@ -2,11 +2,11 @@
 
 namespace App;
 
-use Illuminate\Auth\AuthManager as Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Abstraction\Eventable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Acara extends Eventable
 {

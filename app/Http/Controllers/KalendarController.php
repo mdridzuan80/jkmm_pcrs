@@ -46,15 +46,17 @@ class KalendarController extends BaseController
     public function rpcEventAnggotaIndex(Anggota $profil, Request $request, Manager $fractal, Event $event)
     {
         $checkinout = collect(
-            ($profil->finalKehadiran()->events()->getEventBetween([
+            $profil->finalKehadiran()->events()->getEventBetween([
                 $request->input('start'),
                 $request->input('end')
-            ])->get())->load('cuti')->toArray()
+            ])->get()->toArray()
         );
+
+
         $cuti = Cuti::events()->getEventBetween([$request->input('start'), $request->input('end')])->get()->toArray();
         $acara = $profil->acara()->events()->getByDateRange($request->input('start'), $request->input('end'))->get();
 
-        $events = $checkinout->merge($cuti)->merge($acara);
+        $events = $checkinout->merge($acara)->merge($cuti);
         $startTime = today()->addHours(4);
         $endTime = today()->addHours(13);
         $checkIn = optional(
