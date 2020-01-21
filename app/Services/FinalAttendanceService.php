@@ -244,14 +244,16 @@ class FinalAttendanceService
 
     public function isEarly($check_in, $check_out, $shift)
     {
+        $rulePunchInMin = Carbon::parse($check_in->toDateString() . " " . self::MINIMUM);
         $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . $shift->check_in->toTimeString());
         $rulePunchOut = Carbon::parse($check_out->toDateString() . " " . $shift->check_out->toTimeString());
 
-        if (!$check_in || $this->statusLewat) {
+
+        if (!$check_in) {
             return $this->statusAwal = $check_out->lte($rulePunchOut);
         }
 
-        if ($check_in->lt($rulePunchIn)) {
+        if ($check_in->lt($rulePunchInMin)) {
             return $this->statusAwal = $rulePunchIn->diffInSeconds($check_out) < self::TOTAL_HOURS;
         }
 
