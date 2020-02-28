@@ -24,11 +24,23 @@ class JustifikasiController extends BaseController
     public function rpcStore(JustifikasiRequest $request, Anggota $profil)
     {
         if (Flow::pelulus($profil)) {
-            $justifikasi = [
+            $tarikh = substr($request->input('tarikh'), 0, 10);
+            $dataJustifikasiPagi = [
                 'finalattendance_id' => $request->input('finalAttendance'),
                 'basedept_id' => $profil->xtraAttr->basedept_id,
-                'tarikh_mula' => $request->input('tarikh'),
-                'tarikh_tamat' => $request->input('tarikh'),
+                'tarikh_mula' =>  $tarikh . " 07:30",
+                'tarikh_tamat' =>  $tarikh . " 12:59",
+                'flag_justifikasi' => $request->input('sama'),
+                'alasan' => $request->input('alasan'),
+                'pelulus_id' => Flow::pelulus($profil)->xtraAttr->anggota_id,
+                'kategori' => Acara::KATEGORI_JUSTIFIKASI
+            ];
+
+            $dataJustifikasiPetang = [
+                'finalattendance_id' => $request->input('finalAttendance'),
+                'basedept_id' => $profil->xtraAttr->basedept_id,
+                'tarikh_mula' =>  $tarikh . " 13:00",
+                'tarikh_tamat' =>  $tarikh . " 18:00",
                 'flag_justifikasi' => $request->input('sama'),
                 'alasan' => $request->input('alasan'),
                 'pelulus_id' => Flow::pelulus($profil)->xtraAttr->anggota_id,
@@ -44,6 +56,30 @@ class JustifikasiController extends BaseController
                 $justifikasi['medan_kesalahan'] = Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG;
                 $justifikasiPetang->simpan($justifikasi);
 
+                if ($justifikasiPagi->simpan($justifikasi) && $justifikasiPetang->simpan($justifikasi)) {
+                    dispatch(new JustifikasiSendingEmailJob(
+                        $profil,
+                        $request->input('finalAttendance'),
+                        $request->input('medanKesalahan')
+                    ));
+
+                    return response('Ok', 200);
+                }
+
+                return response('Data conflict', 409);
+            }
+
+            $justifikasiA = new Justifikasi;
+            $justifikasi['medan_kesalahan'] = $request->input('medanKesalahan');
+
+            if ($request->input('medanKesalahan') == Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI) {
+                $justifikasi = $dataJustifikasiPagi;
+            }
+            if ($request->input('medanKesalahan') == Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG) {
+                $justifikasi = $dataJustifikasiPetang;
+            }
+
+            if ($justifikasiA->simpan($justifikasi)) {
                 dispatch(new JustifikasiSendingEmailJob(
                     $profil,
                     $request->input('finalAttendance'),
@@ -53,17 +89,7 @@ class JustifikasiController extends BaseController
                 return response('Ok', 200);
             }
 
-            $justifikasiA = new Justifikasi;
-            $justifikasi['medan_kesalahan'] = $request->input('medanKesalahan');
-            $justifikasiA->simpan($justifikasi);
-
-            dispatch(new JustifikasiSendingEmailJob(
-                $profil,
-                $request->input('finalAttendance'),
-                $request->input('medanKesalahan')
-            ));
-
-            return response('Ok', 200);
+            return response('Data conflict', 409);
         }
 
         return response('Sila semak konfigurasi flow anggota atau ketua jabatan', 422);

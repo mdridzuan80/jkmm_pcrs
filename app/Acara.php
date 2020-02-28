@@ -87,15 +87,18 @@ class Acara extends Eventable
 
     public static function storeAcara(Anggota $profil, Request $request)
     {
-        $acara = new Acara;
-        $acara->basedept_id = $profil->xtraAttr->basedept_id;
-        $acara->kategori = $request->input('jenisAcara');
-        $acara->perkara = $request->input('perkara');
-        $acara->tarikh_mula = Carbon::parse($request->input('masaMula'));
-        $acara->tarikh_tamat = Carbon::parse($request->input('masaTamat'));
-        $acara->keterangan = $request->input('keterangan');
-        $acara->user_id = Auth::user()->id;
-        return $profil->acara()->save($acara);
+        if (!self::isOverlaped(Auth::user()->id, Carbon::parse($request->input('masaMula')), Carbon::parse($request->input('masaTamat')))) {
+            $acara = new Acara;
+            $acara->basedept_id = $profil->xtraAttr->basedept_id;
+            $acara->kategori = $request->input('jenisAcara');
+            $acara->perkara = $request->input('perkara');
+            $acara->tarikh_mula = Carbon::parse($request->input('masaMula'));
+            $acara->tarikh_tamat = Carbon::parse($request->input('masaTamat'));
+            $acara->keterangan = $request->input('keterangan');
+            $acara->user_id = Auth::user()->id;
+            return $profil->acara()->save($acara);
+        }
+        return [];
     }
 
     public function eventableItem()
@@ -123,5 +126,22 @@ class Acara extends Eventable
         if ($this->kategori === self::KATEGORI_CATATAN) {
             return 'catatan';
         }
+    }
+
+    static public function isOverlaped($user_id, $masa_mula, $masa_tamat)
+    {
+        return self::where('user_id', $user_id)
+            ->where(function ($query) use ($masa_mula, $masa_tamat) {
+                $query->where(function ($query) use ($masa_mula, $masa_tamat) {
+                    $query->where('tarikh_mula', '<=', $masa_mula)
+                        ->where('tarikh_tamat', '>=', $masa_mula);
+                })->orWhere(function ($query) use ($masa_mula, $masa_tamat) {
+                    $query->where('tarikh_mula', '<=', $masa_tamat)
+                        ->where('tarikh_tamat', '>=', $masa_tamat);
+                })->orWhere(function ($query) use ($masa_mula, $masa_tamat) {
+                    $query->where('tarikh_mula', '>=', $masa_mula)
+                        ->where('tarikh_tamat', '<=', $masa_tamat);
+                });
+            })->count();
     }
 }

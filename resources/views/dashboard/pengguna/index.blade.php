@@ -293,6 +293,7 @@
                         });
                     }
                 }).catch((error) => {
+                    console.log(error);
                     swal({
                         title: 'Ralat!',
                         text: "Operasi tidak berjaya!.\nSila berhubung dengan Pentadbir sistem",

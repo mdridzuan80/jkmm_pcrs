@@ -83,9 +83,14 @@ class KalendarController extends BaseController
 
     public function rpcEventAnggotaStore(Anggota $profil, StoreAcaraRequest $request, Manager $fractal, Event $event)
     {
-        $acara = Acara::storeAcara($profil, $request)->eventableItem();
+        $acara = Acara::storeAcara($profil, $request);
         $manager = $fractal->createData(new Item($acara, $event));
-        return response()->json($manager->toArray());
+
+        if ($acara && $acara->eventableItem()) {
+            return response()->json($manager->toArray());
+        }
+
+        return response()->json($acara, 409);
     }
 
     public function rpcEventAnggotaShow(Anggota $profil, $acaraId, $jenisSumber)
