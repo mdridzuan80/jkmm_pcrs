@@ -29,7 +29,7 @@ class JustifikasiController extends BaseController
                 'finalattendance_id' => $request->input('finalAttendance'),
                 'basedept_id' => $profil->xtraAttr->basedept_id,
                 'tarikh_mula' =>  $tarikh . " 07:30",
-                'tarikh_tamat' =>  $tarikh . " 12:59",
+                'tarikh_tamat' =>  $tarikh . " 09:00",
                 'flag_justifikasi' => $request->input('sama'),
                 'alasan' => $request->input('alasan'),
                 'pelulus_id' => Flow::pelulus($profil)->xtraAttr->anggota_id,
