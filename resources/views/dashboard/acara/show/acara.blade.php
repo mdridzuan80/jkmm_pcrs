@@ -57,7 +57,7 @@
                                 $petang = $event->justifikasi->where('medan_kesalahan', $Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG)->first();
                             @endphp
                             
-                            @if ($event->tatatertib_flag == $Kehadiran::FLAG_TATATERTIB_TUNJUK_SEBAB)
+                            @if ($event->tatatertib_flag == $Kehadiran::FLAG_TATATERTIB_TUNJUK_SEBAB && !$events->hasAcara())
                                 <tr>
                                     <td style="width: 50%;">
                                         @if (!$pagi && $Utility::kesalahanCheckIn($event->kesalahan) != $Kehadiran::FLAG_KESALAHAN_NONE)
