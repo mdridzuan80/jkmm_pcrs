@@ -133,6 +133,14 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
 
+@if (!app()->environment('production'))
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+@else
+    <!-- production version, optimized for size and speed -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+@endif
+
 <script>
   var base_url = '{{ url('') }}/';
   var bulan = {!! pcrsBulan()->toJson(JSON_NUMERIC_CHECK) !!};

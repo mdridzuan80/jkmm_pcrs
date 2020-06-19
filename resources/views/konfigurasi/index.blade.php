@@ -66,6 +66,43 @@
                                                 </table>
                                             </td>
                                         </tr>
+                                        <tr id="app-puasa">
+                                            <div v-cloak>
+                                            <td style="width: 40%">
+                                                <b>Tarikh Berpuasa</b>
+                                                <p class="help-block">
+                                                    Mengishtiharkan Tarikh permulaan dan tamat berpuasa
+                                                </p>
+                                            </td>
+                                            <td style="width: 60%">
+                                                <table class="table" style="width: 100%; background-color: transparent;">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" id="tkhPuasaMula" name="txtMula" class="form-control" placeholder="Tarikh Mula" v-model="tkhMula">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="tkhPuasaTamat" name="txtTamat" class="form-control" placeholder="Tarikh Tamat" v-model="tkhTamat">
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-info" @click="updateTarikh">Simpan</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <ol>
+                                                            <li v-for="puasa of senPuasa" :key="puasa" >
+                                                                Mula: @{{ puasa.tkhmula }} - Tamat: @{{ puasa.tkhtamat }} &nbsp;
+                                                                <a title="Hapus Peranan" class="btn btn-danger btn-xs" @click="deleteTarikh(puasa.id)">
+                                                                    <i class="fa fa-trash-o"></i>
+                                                                </a>
+                                                            </li>
+                                                            </ol>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            </div>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -635,6 +672,126 @@
                         })
                     }
                 });
+            });
+
+            var appPuasa = new Vue({
+                el: "#app-puasa",
+                data: {
+                    tkhMula: null,
+                    tkhTamat: null,
+                    senPuasa: []
+                },
+                methods: {
+                    updateTarikh() {            
+                        swal({
+                            title: 'Amaran!',
+                            text: 'Anda pasti untuk menambah rekod pengisytiharan puasa?',
+                            type: 'warning',
+                            cancelButtonText: 'Tidak',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya!',
+                            showLoaderOnConfirm: true,
+                            allowOutsideClick: () => !swal.isLoading(),
+                            preConfirm: (email) => {
+                                return new Promise((resolve, reject) => {
+                                    $.ajax({
+                                        method: "post",
+                                        url: base_url + "rpc/puasa",
+                                        data: {tkhMula: this.tkhMula, tkhTamat: this.tkhTamat},                
+                                        success: function(result) {
+                                            console.log(result);
+                                            resolve(result);
+                                        },
+                                        error: function(result) {
+                                            reject(result);
+                                        },
+                                        statusCode: login()
+                                    });
+                                })
+                            }
+                        }).then((result) => {
+                            if (result.value) {
+                                this.senPuasa.push(result.value.data);
+
+                                this.tkhMula = null;
+                                this.tkhTamat = null;
+                            }
+                        }).catch(function () {
+                            swal({
+                                title: 'Ralat!',
+                                text: 'Anda tidak dibenarkan untuk melakukan tindakan ini!',
+                                type: 'error'
+                            });
+                        });
+                    },
+                    deleteTarikh(id) {
+                        swal({
+                            title: 'Amaran!',
+                            text: 'Anda pasti untuk menghapuskan rekod pengisytiharan puasa?',
+                            type: 'warning',
+                            cancelButtonText: 'Tidak',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya!',
+                            showLoaderOnConfirm: true,
+                            allowOutsideClick: () => !swal.isLoading(),
+                            preConfirm: (email) => {
+                                return new Promise((resolve, reject) => {
+                                    $.ajax({
+                                        method: "delete",
+                                        url: base_url + "rpc/puasa/"+id,
+                                        data: {tkhMula: this.tkhMula, tkhTamat: this.tkhTamat},                
+                                        success: function(result) {
+                                            console.log(result);
+                                            resolve(result);
+                                        },
+                                        error: function(result) {
+                                            reject(result);
+                                        },
+                                        statusCode: login()
+                                    });
+                                })
+                            }
+                        }).then((result) => {
+                            if (result.value) {
+                                this.senPuasa = this.senPuasa.filter(puasa => puasa.id != id);
+                            }
+                        }).catch(function () {
+                            swal({
+                                title: 'Ralat!',
+                                text: 'Anda tidak dibenarkan untuk melakukan tindakan ini!',
+                                type: 'error'
+                            });
+                        });
+                    }
+                },
+                mounted () {
+                    $('#tkhPuasaMula').datepicker({
+                        format: 'yyyy-mm-dd',
+                        todayHighlight: true,
+                        autoclose: true
+                    }).on('changeDate', () => { this.tkhMula = $('#tkhPuasaMula').val() } )
+
+                    $('#tkhPuasaTamat').datepicker({
+                        format: 'yyyy-mm-dd',
+                        todayHighlight: true,
+                        autoclose: true
+                    }).on('changeDate', () => { this.tkhTamat = $('#tkhPuasaTamat').val() });
+                },
+                created () {    
+                    $.ajax({
+                        url: base_url + "rpc/puasa/",                
+                        success: response => {
+                            this.senPuasa = response.data.map((item)=> {
+                                item.tkhmula = moment(item.tkhmula).format('DD-MM-YYYY');
+                                item.tkhtamat = moment(item.tkhtamat).format('DD-MM-YYYY');
+                                return item;
+                            });
+                        },
+                        error: response => {
+                            console.log(response);
+                        }
+                    });
+                },
             });
         });
     </script>
