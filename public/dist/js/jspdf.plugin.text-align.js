@@ -1,6 +1,6 @@
-(function(api, $) {
+(function (api, $) {
     "use strict";
-    api.writeText = function(x, y, text, options) {
+    api.writeText = function (x, y, text, options) {
         options = options || {};
 
         var defaults = {
