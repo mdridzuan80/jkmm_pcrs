@@ -12,14 +12,14 @@ use App\XtraAnggota;
 use App\FinalAttendance;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use App\Services\FinalAttendance\KesalahanCalculatorManager;
 
 class FinalAttendanceService
 {
-    const TOTAL_HOURS = 32400;
-    const MINIMUM = "7:30";
+    //const TOTAL_HOUR = 32400; //formula 9 hours in second 60*60*9
+    //const MINIMUM = "7:30";
 
     private $statusLewat = false;
-    private $statusAwal = false;
 
     public function tarikhTamat($tkhTamat)
     {
@@ -75,7 +75,7 @@ class FinalAttendanceService
     {
         $preData = $this->preDataFinalAttendance($profil, $tarikh, $shift, $cuti, $rekodKehadiran);
 
-        $this->janaFinalAttendance($preData);
+        $this->janaFinalAttendance($profil, $preData, $shift);
 
         if ($this->statusLewat) {
             $this->tambahLewat($profil, $preData, $shift, Kelewatan::FLAG_NON_SMS);
@@ -85,16 +85,20 @@ class FinalAttendanceService
 
     private function preDataFinalAttendance(Anggota $profil, Carbon $tarikh, $shift, $cuti, $rekodKehadiran)
     {
+        $check_in = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_IN, $profil->ZIP);
+        $check_out = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_OUT, $profil->ZIP);
+        $check_in_mid = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MIN, $profil->ZIP);
+        $check_out_mid = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MOUT, $profil->ZIP);
+        $kesalahan = (new KesalahanCalculatorManager)->calculate($profil, $tarikh, $check_in, $check_out, $cuti, $shift);
         return (object) [
             'anggota_id' => $profil->userid,
             'basedept_id' => $profil->xtraAttr->basedept_id,
             'tarikh' => $tarikh,
-            'check_in' => $check_in = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_IN, $profil->ZIP),
-            'check_out' => $check_out = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_OUT, $profil->ZIP),
-            'check_in_mid' => $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MIN, $profil->ZIP),
-            'check_out_mid' => $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MOUT, $profil->ZIP),
-            'hours' => $this->totalHours($tarikh, $check_in, $check_out),
-            'kesalahan' => json_encode($kesalahan = $this->getKesalahan($tarikh, $check_in, $check_out, $cuti, $shift)),
+            'check_in' => $check_in,
+            'check_out' => $check_out,
+            'check_in_mid' => $check_in_mid,
+            'check_out_mid' => $check_out_mid,
+            'kesalahan' => json_encode($kesalahan),
             'tatatertib_flag' => $this->getFlag($kesalahan),
             'shift_id' => $shift->id,
         ];
@@ -107,12 +111,10 @@ class FinalAttendanceService
                 case Kehadiran::PUNCH_IN:
                     if ($this->isCuti($tarikh, $cuti)) {
                         return $value->checktime->gte($tarikh->copy()->addHours(4)) &&
-                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4)) &&
-                            $value->checktype != '1' && $value->checktype != 'i';
+                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4));
                     } else {
                         return $value->checktime->gte($tarikh->copy()->addHours(4)) &&
-                            $value->checktime->lt($tarikh->copy()->addHours(13)) &&
-                            $value->checktype != '1' && $value->checktype != 'i';
+                            $value->checktime->lt($tarikh->copy()->addHours(13));
                     }
 
                     break;
@@ -120,12 +122,10 @@ class FinalAttendanceService
                 case Kehadiran::PUNCH_OUT:
                     if ($this->isCuti($tarikh, $cuti)) {
                         return $value->checktime->gte($tarikh->copy()->addHours(4)) &&
-                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4)) &&
-                            $value->checktype != '1' && $value->checktype != 'i';
+                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4));
                     } else {
                         return $value->checktime->gte($tarikh->copy()->addHours(13)) &&
-                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4)) &&
-                            $value->checktype != '1' && $value->checktype != 'i';
+                            $value->checktime->lt($tarikh->copy()->addDays(1)->addHours(4));
                     }
 
                     break;
@@ -165,51 +165,6 @@ class FinalAttendanceService
         return null;
     }
 
-    public function getKesalahan($tarikh, $checkIn, $checkOut, $cuti, $shift)
-    {
-        $kesalahan = [];
-
-        if ($this->isCuti($tarikh, $cuti)) {
-            return $kesalahan;
-        }
-
-        if (($salah = $this->calcKesalahanPagi($checkIn, $shift)) != Kehadiran::FLAG_KESALAHAN_NONE) {
-            $kesalahan[] = $salah;
-        }
-
-        if (($salah = $this->calcKesalahanPetang($checkIn, $checkOut, $shift)) != Kehadiran::FLAG_KESALAHAN_NONE) {
-            $kesalahan[] = $salah;
-        }
-
-        return $kesalahan;
-    }
-
-    public function calcKesalahanPagi($checkIn, $shift)
-    {
-        if (!$checkIn) {
-            return Kehadiran::FLAG_KESALAHAN_NONEIN;
-        }
-
-        if ($this->isLate($checkIn, $shift)) {
-            return Kehadiran::FLAG_KESALAHAN_LEWAT;
-        }
-
-        return Kehadiran::FLAG_KESALAHAN_NONE;
-    }
-
-    public function calcKesalahanPetang($checkIn, $checkOut, $shift)
-    {
-        if (!$checkOut) {
-            return Kehadiran::FLAG_KESALAHAN_NONEOUT;
-        }
-
-        if ($this->isEarly($checkIn, $checkOut, $shift)) {
-            return Kehadiran::FLAG_KESALAHAN_AWAL;
-        }
-
-        return Kehadiran::FLAG_KESALAHAN_NONE;
-    }
-
     public function getFlag($kesalahan)
     {
         foreach ($kesalahan as $salah) {
@@ -221,75 +176,9 @@ class FinalAttendanceService
         return Kehadiran::FLAG_TATATERTIB_CLEAR;
     }
 
-    public function isCuti(Carbon $tarikh, $cuti)
+    public function janaFinalAttendance($profil, $preData, $shift)
     {
-        return $cuti->contains(function ($item, $key) use ($tarikh) {
-            return $item->tarikh->eq($tarikh);
-        }) ||
-            $tarikh->dayOfWeek == Carbon::SATURDAY ||
-            $tarikh->dayOfWeek == Carbon::SUNDAY;
-    }
-
-    public function isLate($check_in, $shift)
-    {
-        if (!$check_in) {
-            return $this->statusLewat = false;
-        }
-
-        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . $shift->check_in->toTimeString());
-        $paramBenarLewat = (int) Parameter::where('kod', 'P_BENAR_LEWAT')->first()->nilai;
-
-        return $this->statusLewat = $check_in->gte($rulePunchIn->addMinutes($paramBenarLewat));
-    }
-
-    public function isEarly($check_in, $check_out, $shift)
-    {
-        $rulePunchOut = Carbon::parse($check_out->toDateString() . " " . $shift->check_out->toTimeString());
-
-
-        if (!$check_in || $this->statusLewat) {
-            return $this->statusAwal = $check_out->lte($rulePunchOut);
-        }
-
-        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . $shift->check_in->toTimeString());
-
-        if ($check_in->lt($rulePunchIn)) {
-            return $this->statusAwal = $rulePunchIn->diffInSeconds($check_out) < self::TOTAL_HOURS;
-        }
-
-        return $this->statusAwal = $check_in->diffInSeconds($check_out) < self::TOTAL_HOURS;
-    }
-
-    public function janaFinalAttendance($preData)
-    {
-        $finalAttendance = FinalAttendance::firstOrNew(['anggota_id' => $preData->anggota_id, 'tarikh' => $preData->tarikh]);
-
-        $finalAttendance->anggota_id = $preData->anggota_id;
-        $finalAttendance->basedept_id = $preData->basedept_id;
-        $finalAttendance->tarikh = $preData->tarikh;
-        $finalAttendance->check_in = $preData->check_in;
-        $finalAttendance->check_out = $preData->check_out;
-        $finalAttendance->check_in_mid = $preData->check_in_mid;
-        $finalAttendance->check_out_mid = $preData->check_out_mid;
-        $finalAttendance->hours = $preData->hours;
-        $finalAttendance->kesalahan = $preData->kesalahan;
-        $finalAttendance->tatatertib_flag = $preData->tatatertib_flag;
-        $finalAttendance->shift_id = $preData->shift_id;
-
-        $finalAttendance->save();
-    }
-
-    public function totalHours($tarikh, $checkIn, $checkOut)
-    {
-        if ($checkOut) {
-            if (!$checkIn) {
-                $checkIn = $tarikh->copy()->addHours(9);
-            }
-
-            return $checkIn->diffInSeconds($checkOut);
-        }
-
-        return 0;
+        FinalAttendance::updateOrCreate(['anggota_id' => $preData->anggota_id, 'tarikh' => $preData->tarikh], (array) $preData);
     }
 
     public function tambahLewat($profil, $preData, $shift, $smsFlag)
@@ -309,5 +198,14 @@ class FinalAttendanceService
             ->where('check_in', '>=', $tkhMula)
             ->where('check_in', '<=', $tkhTamat)
             ->delete();
+    }
+
+    public function isCuti(Carbon $tarikh, $cuti)
+    {
+        return $cuti->contains(function ($item, $key) use ($tarikh) {
+            return $item->tarikh->eq($tarikh);
+        }) ||
+            $tarikh->dayOfWeek == Carbon::SATURDAY ||
+            $tarikh->dayOfWeek == Carbon::SUNDAY;
     }
 }

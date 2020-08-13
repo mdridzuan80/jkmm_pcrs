@@ -80,6 +80,13 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::post('/waktu_bekerja_harian/{profil}', 'WaktuBerperingkatController@rpcHarianCreate')->middleware('can:add-waktu_bekerja');
             Route::delete('/waktu_bekerja_harian/{profil}/{id}', 'WaktuBerperingkatController@rpcDelete')->middleware('can:delete-waktu_bekerja');
 
+            Route::get('/puasa_conf/{profil}', 'AnggotaController@rpcPuasaConf');
+            Route::post('/puasa_conf/{profil}', 'AnggotaController@rpcPuasaConfStore');
+
+            Route::get('/mengandung_conf/{profil}', 'AnggotaController@rpcMengandungConf');
+            Route::post('/mengandung_conf/{profil}', 'AnggotaController@rpcMengandungConfStore');
+            Route::delete('/{profil}/mengandung_conf/{shiftConf}', 'AnggotaController@rpcMengandungConfDelete');
+
             // Pegawai Penilai
             Route::get('/{profil}/penilai', 'AnggotaController@rpcPenilaiIndex')->middleware('can:view-penilai');
             Route::post('/{profil}/penilai', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');

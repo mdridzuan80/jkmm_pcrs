@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Puasa;
 use App\Utility;
 use App\Anggota;
+use App\ShiftConf;
 use League\Fractal\Manager;
 use App\Base\BaseController;
 use Illuminate\Http\Request;
@@ -99,5 +101,94 @@ class AnggotaController extends BaseController
     public function rpcFlowUpdate(Request $request, Anggota $profil)
     {
         $profil->updateFlow($request);
+    }
+
+    public function rpcPuasaConf(Anggota $profil, Puasa $puasa)
+    {
+        $senPuasa = $puasa->tahunSemasa()->with(['confs' => function ($query) use ($profil) {
+            $query->where('anggota_id', $profil->userid)->orderBy('id');
+        }])->get();
+
+        $senPuasaAssocConf = $senPuasa->map(function ($item, $key) use ($profil) {
+            $confs = $item->confs;
+            unset($item->confs);
+            if ($confs->isNotEmpty()) {
+                $item->conf = $confs->last();
+            } else {
+                $item->conf = ["pilihan" => ShiftConf::PUASA];
+            }
+
+            return $item;
+        });
+
+        return response()->json($senPuasaAssocConf, 200);
+    }
+
+    public function rpcPuasaConfStore(Request $request, Anggota $profil)
+    {
+        $puasa = Puasa::find($request->input('puasa_id'));
+
+        ShiftConf::updateOrCreate(
+            [
+                'anggota_id' => $profil->userid,
+                'puasa_id' => $puasa->id,
+                'jenis' => ShiftConf::PUASA
+            ],
+            [
+                'pilihan' => $request->input('pilihan')
+            ]
+        );
+
+        \Artisan::call('emasa:janafinalatt', [
+            '--mula' => $puasa->tkh_mula,
+            '--tamat' =>  $puasa->tkh_tamat,
+            'users' => $profil->userid,
+        ]);
+    }
+
+    public function rpcMengandungConf(Anggota $profil)
+    {
+        $senMengandung = ShiftConf::where('anggota_id', $profil->userid)
+            ->where('jenis', ShiftConf::MENGANDUNG)
+            ->tahunSemasa()
+            ->get();
+
+        return response()->json($senMengandung, 200);
+    }
+
+    public function rpcMengandungConfStore(Request $request, Anggota $profil)
+    {
+        $shiftMengandungConf = ShiftConf::create(
+            [
+                'anggota_id' => $profil->userid,
+                'puasa_id' => $request->input('puasa_id'),
+                'jenis' => $request->input('jenis'),
+                'pilihan' => $request->input('pilihan'),
+                'tkh_mula' => $request->input('tkh_mula'),
+                'tkh_tamat' => $request->input('tkh_tamat'),
+            ]
+        );
+
+        \Artisan::call('emasa:janafinalatt', [
+            '--mula' => $request->input('tkh_mula'),
+            '--tamat' =>  $request->input('tkh_tamat'),
+            'users' => $profil->userid,
+        ]);
+
+        return response()->json($shiftMengandungConf, 201);
+    }
+
+    public function rpcMengandungConfDelete(Anggota $profil, ShiftConf $shiftConf)
+    {
+        $tkh_mula = $shiftConf->tkh_mula;
+        $tkh_tamat = $shiftConf->tkh_tamat;
+
+        $shiftConf->delete();
+
+        \Artisan::call('emasa:janafinalatt', [
+            '--mula' => $tkh_mula,
+            '--tamat' =>  $tkh_tamat,
+            'users' => $profil->userid,
+        ]);
     }
 }

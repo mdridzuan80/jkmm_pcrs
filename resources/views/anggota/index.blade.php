@@ -403,6 +403,8 @@
 
 <script>
 
+    var mProfil = {};
+
     $(function() {
         var dataSearch = {
             searchKey: '',
@@ -416,7 +418,7 @@
             subDept: false
         };
 
-        var mProfil = {
+        mProfil = {
             title: '',
             userId: '',
             operasi: '',
