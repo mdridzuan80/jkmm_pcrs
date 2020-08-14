@@ -533,7 +533,7 @@
             function exportPDF(result) {
                 try {     
                     var doc = new jsPDF('p', 'pt', 'a4');
-                    var head = [["Tarikh", "Masuk", "Keluar", "Jam", "Kesalahan", "Catatan", "TT"]];
+                    var head = [["TARIKH", "MASUK", "KELUAR", "JAM", "KESALAHAN", "CATATAN", "TT"]];
                     var body = dataProvider(result);
                     
                     var totalPagesExp = "{total_pages_count_string}";
@@ -544,13 +544,14 @@
                         theme: 'grid',
                         showHead: 'firstPage',
                         margin: {top: 65, bottom: 85},
+                        headStyles: {fontSize: 8},
                         columnStyles: {
-                            0: {cellWidth: 50, fontSize:9},
-                            1: {halign: "center", fontSize:9},
-                            2: {halign: "center",  fontSize:9},
-                            3: {halign: "center",  fontSize:9},
-                            4: {cellWidth: 80,  fontSize:9},
-                            5: {cellWidth: 170,  fontSize:9}
+                            0: {cellWidth: 50, fontSize:8},
+                            1: {halign: "center", fontSize:8},
+                            2: {halign: "center",  fontSize:8},
+                            3: {halign: "center",  fontSize:8},
+                            4: {cellWidth: 80,  fontSize:8},
+                            5: {cellWidth: 170,  fontSize:8}
                         },
                         didParseCell: function(data) {                            
                             if (data.row.section == 'head') {
@@ -689,7 +690,7 @@
 
             function dataProvider(result) {
                 return result.map((item)=>[
-                    moment(item.start).format("DD-MM-YYYY"),
+                    moment(item.start).format("DD-MM"),
                     (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '',
                     (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '',
                     item.jumlah_jam,
