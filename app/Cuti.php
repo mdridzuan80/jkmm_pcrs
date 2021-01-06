@@ -3,6 +3,7 @@
 namespace App;
 
 use DB;
+use Carbon\Carbon;
 use App\Abstraction\Eventable;
 use Awobaz\Compoships\Compoships;
 
@@ -30,5 +31,10 @@ class Cuti extends Eventable
         return self::select(DB::raw('year(tarikh) as year'))
             ->groupBy('year')
             ->get();
+    }
+
+    public function getTarikhCutiAttribute($value)
+    {
+        return Carbon::createFromTimeString($this->tarikh);
     }
 }

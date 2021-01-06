@@ -49,14 +49,14 @@ class JustifikasiController extends BaseController
 
             if ($request->input('sama') == Justifikasi::FLAG_JUSTIKASI_SAMA) {
                 $justifikasiPagi = new Justifikasi;
-                $justifikasi['medan_kesalahan'] = Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI;
-                $justifikasiPagi->simpan($justifikasi);
+                $dataJustifikasiPagi['medan_kesalahan'] = Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI;
+                //$justifikasiPagi->simpan($dataJustifikasiPagi);
 
                 $justifikasiPetang = new Justifikasi;
-                $justifikasi['medan_kesalahan'] = Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG;
-                $justifikasiPetang->simpan($justifikasi);
+                $dataJustifikasiPetang['medan_kesalahan'] = Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG;
+                //$justifikasiPetang->simpan($justifikasi);
 
-                if ($justifikasiPagi->simpan($justifikasi) && $justifikasiPetang->simpan($justifikasi)) {
+                if ($justifikasiPagi->simpan($dataJustifikasiPagi) && $justifikasiPetang->simpan($dataJustifikasiPetang)) {
                     dispatch(new JustifikasiSendingEmailJob(
                         $profil,
                         $request->input('finalAttendance'),

@@ -38,13 +38,15 @@
                 <th>TARIKH</th>
                 <th>KETERANGAN</th>
             </tr>
-            @foreach ($cuti as $c)
-                <tr class="row-item" data-id="{{ $c->id }}" data-tarikh="{{ $c->tarikh->format('d-m-Y') }}" data-perihal="{{ $c->perihal }}">
-                    <td width="1">{{ $c->id }}</td>
-                    <td>{{ $c->tarikh->format('d-m-Y') }}</td>
-                    <td>{{ $c->perihal }}</td>
-                </tr>
-            @endforeach
+            @if($cuti->isNotEmpty())
+                @foreach ($cuti as $c)
+                    <tr class="row-item" data-id="{{ $c->id }}" data-tarikh="{{ $c->tarikh_cuti->format('d-m-Y') }}" data-perihal="{{ $c->perihal }}">
+                        <td width="1">{{ $c->id }}</td>
+                        <td>{{ $c->tarikh_cuti->format('d-m-Y') }}</td>
+                        <td>{{ $c->perihal }}</td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 

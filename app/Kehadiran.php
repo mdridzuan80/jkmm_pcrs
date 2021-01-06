@@ -31,15 +31,21 @@ class Kehadiran extends Eventable
         'AWAL' => 'Pulang Awal',
     ];
 
-    protected $dateFormat = 'Y-m-d H:i:s';
-    protected $dates = ['checktime'];
+    //protected $dateFormat = 'Y-m-d H:i:s';
+    //protected $dates = ['checktime'];
 
     public function __construct()
     {
         $this->table = 'checkinout';
         $this->primaryKey = ['userid', 'checktime'];
         $this->incrementing = false;
-        $this->setDateFormat(config('pcrs.modelDateFormat'));
+        //$this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
+
+    //accessor
+    public function getChecktimeAttribute($value)
+    {
+        return Carbon::createFromTimeString($value);
     }
 
     public function scopeRekodByMulaTamat($query, Carbon $tkhMula, Carbon $tkhTamat)

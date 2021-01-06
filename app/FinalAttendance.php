@@ -80,9 +80,7 @@ class FinalAttendance extends Eventable
     public function scopeGetEventBetween($query, array $waktu)
     {
         list($mula, $tamat) = $waktu;
-
         $tamat = Carbon::parse($tamat)->subDay()->format('Y-m-d');
-
         return $query->whereBetween('tarikh', [$mula, $tamat]);
     }
 

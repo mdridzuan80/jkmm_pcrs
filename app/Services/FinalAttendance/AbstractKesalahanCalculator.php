@@ -62,7 +62,7 @@ abstract class AbstractKesalahanCalculator
     private function isCuti(Carbon $tarikh, $cuti)
     {
         return $cuti->contains(function ($item, $key) use ($tarikh) {
-            return $item->tarikh->eq($tarikh);
+            return $item->tarikh_cuti->eq($tarikh);
         }) ||
             $tarikh->dayOfWeek == Carbon::SATURDAY ||
             $tarikh->dayOfWeek == Carbon::SUNDAY;

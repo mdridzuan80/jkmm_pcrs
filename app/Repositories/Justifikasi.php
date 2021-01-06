@@ -25,8 +25,8 @@ class Justifikasi implements Catatan
             $justifikasi = new Acara;
             $justifikasi->basedept_id = $data['basedept_id'];
             $justifikasi->final_attendance_id = $data['finalattendance_id'];
-            $justifikasi->tarikh_mula = $data['tarikh_mula'];
-            $justifikasi->tarikh_tamat = $data['tarikh_tamat'];
+            $justifikasi->tarikh_mula = Carbon::parse($data['tarikh_mula']);
+            $justifikasi->tarikh_tamat = Carbon::parse($data['tarikh_tamat']);
             $justifikasi->medan_kesalahan = $data['medan_kesalahan'];
             $justifikasi->flag_justifikasi = $data['flag_justifikasi'];
             $justifikasi->keterangan = $data['alasan'];

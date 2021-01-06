@@ -12,11 +12,11 @@ class Acara extends Eventable
 {
     protected $table = 'acara';
 
+    public $timestamps = true;
+
     protected $dates = [
         'tarikh_mula',
         'tarikh_tamat',
-        'created_at',
-        'updated_at',
     ];
 
     const JENIS_ACARA_CHECKIN = 'IN';
@@ -31,10 +31,10 @@ class Acara extends Eventable
     const KATEGORI_TIMESLIP = 'T';
     const KATEGORI_CATATAN = 'C';
 
-    public function __construct()
+    /* public function __construct()
     {
         $this->setDateFormat(config('pcrs.modelDateFormat'));
-    }
+    }*/
 
     public function finalAttendance()
     {
@@ -144,4 +144,9 @@ class Acara extends Eventable
                 });
             })->count();
     }
+
+    /* public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value);
+    } */
 }
