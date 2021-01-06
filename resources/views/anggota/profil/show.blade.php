@@ -19,7 +19,7 @@
                     <td><b>BAHAGIAN/ UNIT</b></td>
                     <td>
                         <div style="position: relative;">
-                            <input id="departmentDisplay" class="form-control departmentDisplay" type="text" value="{{ optional($profil->department)->deptname }}" style="background-color: #FFF;" readonly>
+                            <input id="departmentDisplay" class="form-control departmentDisplay" type="text" value="{{ optional($profil->xtraAttr->department)->deptname }}" style="background-color: #FFF;" readonly>
                             <input id="departmentDisplayId" name="txtDepartmentId" class="form-control departmentDisplayId" type="hidden" value="{{ optional($profil->xtraAttr)->dept_id }}" style="background-color: #FFF;" readonly>
                             <div id="treeDisplay" style="display:none;">
                                 <div id="departmentsTree" style="position:absolute; background-color: #FFF; overflow:auto; max-height:200px; border:1px #ddd solid"></div>
