@@ -70,13 +70,14 @@ class JustifikasiController extends BaseController
             }
 
             $justifikasiA = new Justifikasi;
-            $justifikasi['medan_kesalahan'] = $request->input('medanKesalahan');
 
             if ($request->input('medanKesalahan') == Justifikasi::FLAG_MEDAN_KESALAHAN_PAGI) {
                 $justifikasi = $dataJustifikasiPagi;
+                $justifikasi['medan_kesalahan'] = $request->input('medanKesalahan');
             }
             if ($request->input('medanKesalahan') == Justifikasi::FLAG_MEDAN_KESALAHAN_PETANG) {
                 $justifikasi = $dataJustifikasiPetang;
+                $justifikasi['medan_kesalahan'] = $request->input('medanKesalahan');
             }
 
             if ($justifikasiA->simpan($justifikasi)) {
