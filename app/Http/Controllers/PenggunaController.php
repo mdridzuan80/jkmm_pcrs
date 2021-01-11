@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Role;
 use App\Anggota;
-use App\Utility;
 use App\RoleUser;
+use App\Department;
 use League\Fractal\Manager;
 use App\Base\BaseController;
 use Illuminate\Http\Request;
@@ -49,7 +49,12 @@ class PenggunaController extends BaseController
     public function rpcPerananStore(Request $request, Anggota $profil)
     {
         $role = Role::find($request->input('comPeranan'));
-        $profil->user->roles()->attach($role, ['department_id' => $request->input('txtDepartmentId')]);
+
+        if ($role->key == Role::SUPER_ADMIN) {
+            return $profil->user->roles()->attach($role, ['department_id' => Department::first()->deptid]);
+        }
+
+        return $profil->user->roles()->attach($role, ['department_id' => $request->input('txtDepartmentId')]);
     }
 
     public function rpcPerananDestroy(RoleUser $roleUser)
