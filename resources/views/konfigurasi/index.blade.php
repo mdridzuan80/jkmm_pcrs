@@ -208,7 +208,87 @@
     @endcan
     <!-- /.modal -->
 
-        <!-- Modal --> 
+    <!-- Modal --> 
+    @can('view-shift')
+        <div id="modal-shift-edit" class="modal fade" >
+            <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <form id="frm-shift-edit">
+                    <div class="modal-header" style="background-color: steelblue; color: white;">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title"><i class="fa fa-clock-o"></i> Kemaskini Waktu Bekerja</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="col-md-3"><b>NAMA WAKTU BERPERINGKAT</b></td>
+                                    <td>
+                                        <input class="form-control" type="text" name="txtPerihal" placeholder="Perihal" autocomplete="off" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-3"><b>FLEKSI</b></td>
+                                    <td>
+                                        <select id="comFleksi" class="form-control" name="comFleksi" required="">
+                                        <option value="YA">YA</option>
+                                        <option value="TIDAK">TIDAK</option>
+                                    </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>WAKTU MULA</b></td>
+                                    <td>
+                                        <div class="bootstrap-timepicker">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input id="txtWaktuMula2" name="txtWaktuMula" type="text" class="form-control" required>
+                                                    <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                    </div>
+                                                </div>
+                                            <!-- /.input group -->
+                                            </div>
+                                            <!-- /.form group -->
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>WAKTU TAMAT</b></td>
+                                    <td>
+                                        <div class="bootstrap-timepicker">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input id="txtWaktuTamat2" name="txtWaktuTamat" type="text" class="form-control" required>
+                                                    <div class="input-group-addon">
+                                                    <i class="fa fa-clock-o"></i>
+                                                    </div>
+                                                </div>
+                                            <!-- /.input group -->
+                                            </div>
+                                            <!-- /.form group -->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" style="color:#dd4b39;" data-dismiss="modal">BATAL</button>
+                        <button type="submit" class="btn btn-success">SIMPAN</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    @endcan
+    <!-- /.modal -->
+
+    <!-- Modal --> 
     @can('view-cuti')
         <div id="modal-cuti-add" class="modal fade" >
             <div class="modal-dialog modal-md">
@@ -277,6 +357,15 @@
             $('#txtWaktuTamat').timepicker({
                 showInputs: false
             })
+
+            $('#txtWaktuMula2').timepicker({
+                showInputs: false
+            })
+
+            $('#txtWaktuTamat2').timepicker({
+                showInputs: false
+            })
+
 
             $('#txtTarikhCuti').datepicker({
                 format: 'yyyy-mm-dd',
@@ -492,7 +581,37 @@
                 });
             });
 
-            $('#waktu_bekerja_content').on('click', '#top-btn-wp-delete', function(e){
+            $('#modal-shift-edit').on('show.bs.modal', function(e) {
+                $("body").css("cursor", "progress");
+                $.ajax({
+                    async: false,
+                    url: base_url+'rpc/waktu_bekerja/'+shiftID,                
+                    success: function(data) {
+                        console.log(data);
+
+                        $('#frm-shift-edit').find('[name="txtPerihal"]').val(data.data.name);
+                        //$('#frm-shift-edit').find('[name="comFleksi"]').val(data.name);
+                        $('#frm-shift-edit').find('[name="txtWaktuMula"]').val(data.data.starttime);
+                        $('#frm-shift-edit').find('[name="txtWaktuTamat"]').val(data.data.endtime);
+                    },
+                    error: function(err) {
+                        swal({
+                            title: 'Ralat!',
+                            text: 'Proses tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                            type: 'error'
+                        });
+                    },
+                    statusCode: login()
+                });
+                $("body").css("cursor", "default");
+            });
+
+            $('#waktu_bekerja_content').on('click', '#top-btn-wp-edit', function(e) {
+
+                $('#modal-shift-edit').modal();
+            });
+
+            $('#waktu_bekerja_content').on('click', '#top-btn-wp-delete', function(e) {
                 swal({
                     title: 'Amaran!',
                     text: 'Anda pasti untuk menghapuskan maklumat ini?',

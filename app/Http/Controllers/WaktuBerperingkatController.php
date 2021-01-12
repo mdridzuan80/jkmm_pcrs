@@ -9,6 +9,8 @@ use WaktuBerperingkat;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Base\BaseController;
+use League\Fractal\Resource\Item;
+use App\Transformers\ShiftTransformer;
 use App\Http\Requests\StoreShiftRequest;
 use App\Transformers\WaktuBekerjaTransformer;
 use League\Fractal\Resource\Collection as FCollection;
@@ -64,6 +66,14 @@ class WaktuBerperingkatController extends BaseController
         $shifts = Shift::whereNull('deleted_at')->paginate($perPage);
 
         return view('waktu_bekerja.index', compact('shifts'));
+    }
+
+    public function rcpWaktuBekerja(Shift $shift, Manager $fractal, ShiftTransformer $WaktuBekerjaTransformer)
+    {
+        $resource = new Item($shift, $WaktuBekerjaTransformer);
+        $transform = $fractal->createData($resource);
+
+        return response()->json($transform->toArray());
     }
 
     public function rcpTambahWaktuBekerja(StoreShiftRequest $request)

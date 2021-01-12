@@ -54,7 +54,8 @@ Route::middleware('auth:internal,ldap')->group(function () {
         // Waktu bekerja
         Route::get('/waktu_bekerja', 'WaktuBerperingkatController@rcpGridWaktuBekerja')->middleware('can:view-shift');
         Route::post('/waktu_bekerja', 'WaktuBerperingkatController@rcpTambahWaktuBekerja')->middleware('can:add-shift');
-        Route::patch('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:edit-shift');
+        Route::get('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpWaktuBekerja')->middleware('can:view-shift');
+        //Route::patch('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:edit-shift');
         Route::delete('/waktu_bekerja/{shift}', 'WaktuBerperingkatController@rcpHapusWaktuBekerja')->middleware('can:delete-shift');
 
         // Cuti
