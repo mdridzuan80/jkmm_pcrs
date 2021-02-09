@@ -96,8 +96,9 @@ class JustifikasiController extends BaseController
         return response('Sila semak konfigurasi flow anggota atau ketua jabatan', 422);
     }
 
-    public function rpcUpdate(Justifikasi $justifikasi, Request $request)
+    public function rpcUpdate($justifikasi, Request $request)
     {
+        $justifikasi = Acara::find($justifikasi);
         $justifikasi->flag_kelulusan = $request->input('status');
         $justifikasi->save();
     }

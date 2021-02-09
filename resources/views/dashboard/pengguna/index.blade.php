@@ -553,7 +553,7 @@
                             4: {cellWidth: 80,  fontSize:8},
                             5: {cellWidth: 170,  fontSize:8}
                         },
-                        didParseCell: function(data) {                            
+                        didParseCell: function(data) {
                             if (data.row.section == 'head') {
                                 data.cell.styles.fillColor = [54, 54, 54];
                                 data.cell.styles.halign = "center";
@@ -573,29 +573,30 @@
                                 }
                             }
 
-                            if (data.row.section === 'body' && data.column.dataKey === '0') {
+                            if (data.row.section == 'body' && data.column.dataKey == '0') {
+                                console.log(result[data.row.index].start);
                                 data.cell.text = moment(result[data.row.index].start).format('DD (ddd)');
                             }
 
-                            if (data.row.section === 'body' && data.column.dataKey === '4') {
+                            if (data.row.section == 'body' && data.column.dataKey == '4') {
                                 var justifikasi = '';
-                                
-                                if(result[data.row.index].tatatertib_flag === 'TS') {
+                                console.log("huhu");
+                                if(result[data.row.index].tatatertib_flag == 'TS') {
                                     var kesalahan = JSON.parse(result[data.row.index].kesalahan);
 
                                     kesalahan.forEach(function(item, index) {
                                         switch(item) {
                                             case 'NONEIN':
-                                                justifikasi += "Pg : Tiada rekod\n";
+                                                justifikasi += "Pg : Tiada rekod\r\n";
                                             break;
                                             case 'LEWAT':
-                                                justifikasi += "Pg : Hadir lewat\n";
+                                                justifikasi += "Pg : Hadir lewat\r\n";
                                             break;
                                             case 'NONEOUT':
-                                                justifikasi += "Ptg : Tiada rekod\n";
+                                                justifikasi += "Ptg : Tiada rekod\r\n";
                                             break;
                                             case 'AWAL':
-                                                justifikasi += "Ptg : Pulang awal\n";
+                                                justifikasi += "Ptg : Pulang awal\r\n";
                                             break;
                                         }
                                     });                                    
@@ -604,27 +605,27 @@
                                 data.cell.text = justifikasi;
                             }
 
-                            if (data.row.section === 'body' && data.column.dataKey === '5') {
+                            if (data.row.section == 'body' && data.column.dataKey == '5') {
                                 var justifikasi = '';
                                 
                                 if(result[data.row.index].cuti) {
-                                    justifikasi += "Cuti Umum : " + result[data.row.index].cuti.perihal + "\n";
+                                    justifikasi += "Cuti Umum : " + result[data.row.index].cuti.perihal + "\r\n";
                                 }
 
                                 if(result[data.row.index].justifikasi) {
                                     result[data.row.index].justifikasi.forEach(function(item, index) {
                                         //if(index === 0 && item.flag_kelulusan === 'LULUS') {
-                                        if(index === 0) {
+                                        if(index == 0) {
                                             if(item.flag_justifikasi === 'SAMA') {
-                                                justifikasi += "J : " + item.keterangan + "\n";
+                                                justifikasi += "J : " + item.keterangan + "\r\n";
                                             } else {
-                                                justifikasi += "JPG : " + item.keterangan + "\n";
+                                                justifikasi += "JPG : " + item.keterangan + "\r\n";
                                             }
                                         }
 
                                         //if(index === 1 && item.flag_kelulusan === 'LULUS' && item.flag_justifikasi === 'XSAMA') {
-                                        if(index === 1 && item.flag_justifikasi === 'XSAMA') {
-                                            justifikasi += "JPTG : " + item.keterangan + "\n";
+                                        if(index == 1 && item.flag_justifikasi == 'XSAMA') {
+                                            justifikasi += "JPTG : " + item.keterangan + "\r\n";
                                         }
                                     });
                                 }
@@ -690,7 +691,7 @@
 
             function dataProvider(result) {
                 return result.map((item)=>[
-                    moment(item.start).format("DD-MM"),
+                    moment(item.start).format("DD (ddd)"),
                     (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '',
                     (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '',
                     item.jumlah_jam,

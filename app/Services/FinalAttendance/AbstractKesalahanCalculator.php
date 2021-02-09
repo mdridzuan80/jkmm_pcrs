@@ -14,6 +14,7 @@ abstract class AbstractKesalahanCalculator
     protected $statusAwal = false;
 
     const MINIMUM = "7:30";
+    const MAXIMUM = "9:00";
 
     public function kesalahanCalculator($tarikh, $checkIn, $checkOut, $shift, $cuti)
     {
@@ -89,7 +90,7 @@ abstract class AbstractKesalahanCalculator
             return $this->statusAwal = $check_out->lte($rulePunchOut);
         }
 
-        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . self::MINIMUM);
+        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . self::MAXIMUM);
 
         if ($check_in->lt($rulePunchIn)) {
             return $this->statusAwal = $rulePunchIn->diffInSeconds($check_out) < $this->total_hour;

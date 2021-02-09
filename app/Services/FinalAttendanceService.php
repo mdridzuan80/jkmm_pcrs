@@ -17,6 +17,7 @@ class FinalAttendanceService
 {
     //const TOTAL_HOUR = 32400; //formula 9 hours in second 60*60*9
     //const MINIMUM = "7:30";
+    const MAXIMUM = "9:00";
 
     private $statusLewat = false;
 
@@ -89,6 +90,7 @@ class FinalAttendanceService
         $check_in_mid = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MIN, $profil->ZIP);
         $check_out_mid = $this->punch($rekodKehadiran, $tarikh, $cuti, Kehadiran::PUNCH_MOUT, $profil->ZIP);
         $kesalahan = (new KesalahanCalculatorManager)->calculate($profil, $tarikh, $check_in, $check_out, $cuti, $shift);
+
         return (object) [
             'anggota_id' => $profil->userid,
             'basedept_id' => $profil->xtraAttr->basedept_id,
@@ -100,7 +102,22 @@ class FinalAttendanceService
             'kesalahan' => json_encode($kesalahan),
             'tatatertib_flag' => $this->getFlag($kesalahan),
             'shift_id' => $shift->id,
+            'hours' => $this->calculateHours($check_in, $check_out),
         ];
+    }
+
+    private function calculateHours($check_in, $check_out)
+    {
+        if ($check_in && $check_out) {
+            return $check_in->diffInSeconds($check_out);
+        }
+
+        if (!$check_in && $check_out) {
+            $rulePunchIn = Carbon::parse($check_out->toDateString() . " " . self::MAXIMUM);
+            return $rulePunchIn->diffInSeconds($check_out);
+        }
+
+        return 0;
     }
 
     private function punch($rekodKehadiran, Carbon $tarikh, $cuti, $jnsPunch, $jnsUser)
