@@ -145,6 +145,13 @@ class Acara extends Eventable
             })->count();
     }
 
+    public function isJustified()
+    {
+        return $this->flag_kelulusan == self::STATUS_PERMOHONAN_MOHON || 
+        $this->flag_kelulusan == self::STATUS_PERMOHONAN_TOLAK || 
+        $this->flag_kelulusan == self::STATUS_PERMOHONAN_BATAL;
+    }
+
     /* public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value);

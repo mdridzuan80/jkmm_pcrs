@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class XtraAnggota extends Model
@@ -48,6 +49,11 @@ class XtraAnggota extends Model
         return $this->hasOne(FlowAnggota::class, 'anggota_id');
     }
 
+    public function kad()
+    {
+        return $this->hasMany(Kad::class, 'anggota_id', 'anggota_id');
+    }
+
     public function shifts()
     {
         return $this->belongsToMany(Shift::class, 'anggota_shift', 'anggota_id', 'shift_id')
@@ -89,5 +95,29 @@ class XtraAnggota extends Model
                 'dept_id' => $profil->dept_id
             ]
         );
+    }
+
+    public function kesalahanBulanan(Carbon $tkh)
+    {
+        return $this->finalAttendance()
+            ->where('tarikh','>=', $tkh->format('Y-m-d'))
+            ->where('tarikh','<=', $tkh->format('Y-m-') . $tkh->daysInMonth)
+            ->where('tatatertib_flag','TS')
+            ->with('justifikasi')
+            ->get()
+            ->filter(function($value) {
+                if($value->justifikasi->isEmpty()) {
+                    return true;
+                }
+
+                foreach($value->justifikasi as $justifikasi)
+                {
+                    if($justifikasi->isJustified()) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
     }
 }
