@@ -49,9 +49,9 @@ class XtraAnggota extends Model
         return $this->hasOne(FlowAnggota::class, 'anggota_id');
     }
 
-    public function kad()
+    public function warnaKad()
     {
-        return $this->hasMany(Kad::class, 'anggota_id', 'anggota_id');
+        return $this->hasMany(kad::class, 'anggota_id', 'anggota_id');
     }
 
     public function shifts()
@@ -100,19 +100,18 @@ class XtraAnggota extends Model
     public function kesalahanBulanan(Carbon $tkh)
     {
         return $this->finalAttendance()
-            ->where('tarikh','>=', $tkh->format('Y-m-d'))
-            ->where('tarikh','<=', $tkh->format('Y-m-') . $tkh->daysInMonth)
-            ->where('tatatertib_flag','TS')
+            ->where('tarikh', '>=', $tkh->format('Y-m-d'))
+            ->where('tarikh', '<=', $tkh->format('Y-m-') . $tkh->daysInMonth)
+            ->where('tatatertib_flag', 'TS')
             ->with('justifikasi')
             ->get()
-            ->filter(function($value) {
-                if($value->justifikasi->isEmpty()) {
+            ->filter(function ($value) {
+                if ($value->justifikasi->isEmpty()) {
                     return true;
                 }
 
-                foreach($value->justifikasi as $justifikasi)
-                {
-                    if($justifikasi->isJustified()) {
+                foreach ($value->justifikasi as $justifikasi) {
+                    if ($justifikasi->isJustified()) {
                         return true;
                     }
                 }

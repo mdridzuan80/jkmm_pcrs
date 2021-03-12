@@ -147,9 +147,9 @@ class Acara extends Eventable
 
     public function isJustified()
     {
-        return $this->flag_kelulusan == self::STATUS_PERMOHONAN_MOHON || 
-        $this->flag_kelulusan == self::STATUS_PERMOHONAN_TOLAK || 
-        $this->flag_kelulusan == self::STATUS_PERMOHONAN_BATAL;
+        return $this->flag_kelulusan == self::STATUS_PERMOHONAN_MOHON ||
+            $this->flag_kelulusan == self::STATUS_PERMOHONAN_TOLAK ||
+            $this->flag_kelulusan == self::STATUS_PERMOHONAN_BATAL;
     }
 
     /* public function getCreatedAtAttribute($value)

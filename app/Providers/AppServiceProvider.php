@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Acara;
 use App\PegawaiPenilai;
+use App\Services\WarnaKadService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('WarnaKad', function () {
+            return new WarnaKadService;
+        });
     }
 }
