@@ -119,4 +119,11 @@ class XtraAnggota extends Model
                 return false;
             });
     }
+
+    public function warnaKadByBulan($bulan, $tahun)
+    {
+        $kad = $this->warnaKad()->where("bulan", $bulan)->where("tahun", $tahun)->first();
+
+        return $kad->warna_kod ?? Warna::KUNING;
+    }
 }

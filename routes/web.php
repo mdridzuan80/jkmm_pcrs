@@ -133,5 +133,8 @@ Route::middleware('auth:internal,ldap')->group(function () {
         // Justifikasi
         Route::post('/justifikasi/{profil}', 'JustifikasiController@rpcStore');
         Route::put('/justifikasi/{justifikasi}', 'JustifikasiController@rpcUpdate');
+
+        //Warna Kad Semasa
+        Route::get('/warnakad/{profil}/{bulan}/{tahun}', 'WarnaKadAnggotaController@show');
     });
 });

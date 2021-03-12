@@ -543,7 +543,7 @@
                         body,
                         theme: 'grid',
                         showHead: 'firstPage',
-                        margin: {top: 65, bottom: 85},
+                        margin: {top: 75, bottom: 85},
                         headStyles: {fontSize: 8},
                         columnStyles: {
                             0: {cellWidth: 50, fontSize:8},
@@ -640,10 +640,23 @@
                             doc.setFontSize(9);
                             doc.setFontStyle('normal');
 
+                            var bulanLepas = cal.fullCalendar('getDate').subtract(1,"months");
+
+                            console.log(bulanLepas.format('M'), bulanLepas.format('YYYY'));
+
+                            function getWarnaBulanan(bulan, tahun) {
+                                return $.ajax({
+                                    type: "GET",
+                                    url: base_url+"rpc/warnakad/{{ Auth::user()->xtraAnggota->anggota_id}}/"+bulan+"/"+tahun,
+                                    async: false
+                                }).responseText;
+                            }
+
                             doc.text("LAPORAN KEHADIRAN BULANAN", data.settings.margin.left, 30);
                             doc.text("Nama : " + "{{ Auth::user()->xtraAnggota->nama }}", data.settings.margin.left, 40);
                             doc.text("Jabatan/ Bahagian/ Unit : " + "{{ Auth::user()->xtraAnggota->department->deptname }}", data.settings.margin.left, 50);
                             doc.text("Bulan : " + cal.fullCalendar('getDate').format('MMMM YYYY'), data.settings.margin.left, 60);
+                            doc.text("Warna Kad : " + getWarnaBulanan(bulanLepas.format('M'), bulanLepas.format('YYYY')), data.settings.margin.left, 70);
 
                             doc.setFontSize(9);
                             // Footer
