@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\XtraAnggota;
-use Illuminate\Http\Request;
 
 class WarnaKadAnggotaController extends Controller
 {

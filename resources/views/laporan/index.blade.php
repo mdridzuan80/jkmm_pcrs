@@ -27,7 +27,7 @@
                             </tr>
                             <tr>
                                 <td width="1">2.</td>
-                                <td><a href="#"> Laporan Bulanan</a></td>
+                                <td><a href="{{ route('laporan.bulanan') }}"> Laporan Bulanan</a></td>
                             </tr>
                         </table>
                     </div>
