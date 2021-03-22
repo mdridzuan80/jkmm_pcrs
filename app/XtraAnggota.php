@@ -51,7 +51,7 @@ class XtraAnggota extends Model
 
     public function warnaKad()
     {
-        return $this->hasMany(kad::class, 'anggota_id', 'anggota_id');
+        return $this->hasMany(Kad::class, 'anggota_id', 'anggota_id');
     }
 
     public function shifts()
