@@ -63,7 +63,7 @@ class XtraAnggota extends Model
 
     public function finalAttendance()
     {
-        return $this->hasMany(finalAttendance::class, 'anggota_id', 'anggota_id');
+        return $this->hasMany(FinalAttendance::class, 'anggota_id', 'anggota_id');
     }
 
     public function pegawaiYangDinilai()
