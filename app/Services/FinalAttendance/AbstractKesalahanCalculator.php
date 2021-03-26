@@ -90,7 +90,7 @@ abstract class AbstractKesalahanCalculator
             return $this->statusAwal = $check_out->lte($rulePunchOut);
         }
 
-        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . self::MAXIMUM);
+        $rulePunchIn = Carbon::parse($check_in->toDateString() . " " . self::MINIMUM);
 
         if ($check_in->lt($rulePunchIn)) {
             return $this->statusAwal = $rulePunchIn->diffInSeconds($check_out) < $this->total_hour;
