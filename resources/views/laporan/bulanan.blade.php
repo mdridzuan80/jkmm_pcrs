@@ -184,12 +184,17 @@
                     var totalPagesExp = "{total_pages_count_string}";
                     var i = 0;
                     results.forEach(function(row) {
-                        var result = row.events;
+                        var result = row.events.data;
                         var head = [["TARIKH", "MASUK", "KELUAR", "JAM", "KESALAHAN", "CATATAN", "TT"]];
-                        var body = result.filter((item) =>
-                            item.table_name == 'final').map((item)=>[moment(item.start).format("DD-MM-YYYY"), (item.check_in) ? moment(item.check_in).format("h:mm A") : '', (item.check_out) ? moment(item.check_out).format("h:mm A") : '', '']);                        
-                        //var totalPagesExp = "{total_pages_count_string}";
-
+                        var body = result.filter(item => 
+                            item.scheme == 'final')
+                            .map(item => [
+                                moment(item.checkIn).format("DD-MM-YYYY"),
+                                (item.checkIn) ? moment(item.checkIn).format("h:mm A") : '',
+                                (item.checkOut) ? moment(item.checkOut).format("h:mm A") : '',
+                                item.jumlah_jam,
+                            ]);                        
+                        
                         if(i != 0) {
                             doc.addPage();
                         }

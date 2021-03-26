@@ -6,6 +6,7 @@ use App\Anggota;
 use Carbon\Carbon;
 use App\Department;
 use League\Fractal\Manager;
+use App\Transformers\Event;
 use Illuminate\Support\Arr;
 use App\Base\BaseController;
 use League\Fractal\Resource\Collection;
@@ -48,7 +49,7 @@ class LaporanController extends BaseController
         return $this->renderView('laporan.bulanan');
     }
 
-    public function rpcBulanan(LaporanBulananRequest $request)
+    public function rpcBulanan(LaporanBulananRequest $request, Manager $fractal, Event $event)
     {
         $records = [];
         $mula = Carbon::parse($request->input('txtTarikh'));
@@ -57,13 +58,18 @@ class LaporanController extends BaseController
         $officers = Anggota::whereIn('userid', $request->input('comPegawai'))->get();
 
         foreach ($officers as $officer) {
+
+            $events = (new LaporanRepository)->laporanBulanan($officer, $mula, $tamat);
+            $resource = new Collection($events, $event);
+            $transform = $fractal->createData($resource);
+
             array_push($records, [
                 'userid' => $officer->userid,
                 'name' => $officer->xtraAttr->nama,
                 'deptname' => $officer->xtraAttr->department->deptname,
                 'bulan' => $mula->englishMonth . "-" . $mula->year,
                 'warna' => $officer->xtraAttr->warnaKadByBulan($bulanSebelum->month, $bulanSebelum->year),
-                'events' => (new LaporanRepository)->laporanBulanan($officer, $mula, $tamat),
+                'events' => $transform->toArray(),
             ]);
         }
 
