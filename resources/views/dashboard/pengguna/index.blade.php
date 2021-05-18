@@ -37,7 +37,7 @@
                     <div class="modal-header" style="background-color: steelblue; color: white;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA</h4>
+                        <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH TIMESLIP</h4>
                     </div>
                     <div class="modal-body">
                         <h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>
