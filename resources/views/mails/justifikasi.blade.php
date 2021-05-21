@@ -353,6 +353,41 @@
         } 
       }
 
+      td{
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 12px;
+      }
+
+      .mel-lewat td{ background-color:#F00; color:#FFF;}
+      .mel-xpunch td{ background-color:#FF0; color:#060;}
+      .title{
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      table.biasa{
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        border-collapse: collapse;
+        border-color: #666666;
+        border-width: 1px;
+        box-shadow: 0 8px 4px -4px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 2=
+    55, 0.2) inset;
+        color: #333333;
+        margin: 0 auto;
+      }
+
+      table.biasa th{
+        background: #3C3C3E;
+        border-color: #262628;
+        border-style: solid;
+        border-width: 1px;
+        color: #FDFDFF;
+        font-weight: bold;
+        padding: 8px;
+        text-shadow: 0 -1px 1px rgba(0, 0, 2, 0.6);
+        text-transform: uppercase;
+      }
     </style>
   </head>
   <body class="">
@@ -372,28 +407,39 @@
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td>
-                        <p>Kepada Pelulus,</p>
-                        <p>Anggota di bawah seliaan anda memohon kelulusan justifikasi seperti berikut:</p>
-                        <table class="customTable">
-                            <tr>
-                                <td>Nama :</td>
-                                <td>{{ $nama }}</td>
-                            </tr>
-                            <tr>
-                                <td>Tarikh :</td>
-                                <td>{{ $justifikasi->tarikh_mula->format('l, d F Y') }}</td>
-                            </tr>
-                            @if ($justifikasi->flag_justifikasi == $Justifikasi::FLAG_JUSTIKASI_TIDAK_SAMA)
-                                <tr>
-                                    <td>Kesalahan :</td>
-                                    <td>{{ $justifikasi->medan_kesalahan }}</td>
-                                </tr>
-                            @endif
-                            <tr>
-                                <td>Keterangan :</td>
-                                <td>{{ $justifikasi->keterangan }}</td>
-                            </tr>
-                        </table>
+                        <table class="biasa" border="1" cellspacing="0" cellpadding="5">
+	<tr>
+    	<th>MEMOHON KELULUSAN JUSTIFIKASI KEHADIRAN</th>
+    </tr>
+    <tr>
+    	<td>
+        	<table>
+            	<tr>
+                	<td>Pemohon</td>
+                    <td>:</td>
+                    <td>{{ $nama }}</td>
+                </tr>
+                <tr>
+                	<td>Tarikh</td>
+                    <td>:</td>
+                    <td>{{ $justifikasi->tarikh_mula->format('l, d F Y') }}</td>
+                </tr>
+                @if ($justifikasi->flag_justifikasi == $Justifikasi::FLAG_JUSTIKASI_TIDAK_SAMA)
+                    <tr>
+                        <td>Kesalahan :</td>
+                        <td>:</td>
+                        <td>{{ $justifikasi->medan_kesalahan }}</td>
+                    </tr>
+                @endif
+                <tr>
+                	  <td>Keterangan</td>
+                    <td>:</td>
+                    <td>{{ $justifikasi->keterangan }}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
                         <p>&nbsp;</p>
                         <p>{{ env('APP_NAME') }} - {{ env('APP_SHORT_NAME') }}</p>
                       </td>
@@ -429,5 +475,6 @@
         <td>&nbsp;</td>
       </tr>
     </table>
+
   </body>
 </html>
