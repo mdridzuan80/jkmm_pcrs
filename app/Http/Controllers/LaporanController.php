@@ -36,7 +36,7 @@ class LaporanController extends BaseController
     public function rpcHarian(LaporanHarianRequest $request, Manager $fractal, LaporanHarianTransformer $LaporanHariantransformer)
     {
         $bahagian = Department::find($request->input('txtDepartmentId'));
-        $rekod = LaporanRepository::laporanHarian($request->input('txtDepartmentId'), $request->input('txtTarikh'));
+        $rekod = (new LaporanRepository)->laporanHarian($request->input('txtDepartmentId'), $request->input('txtTarikh'));
 
         $resource = new Collection($rekod, $LaporanHariantransformer);
         $transform = $fractal->createData($resource);
