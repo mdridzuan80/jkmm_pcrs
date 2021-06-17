@@ -128,6 +128,10 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::post('/flow_bahagian/{department}', 'KonfigurasiController@rpcFlowBahagianUpdate')->middleware('can:edit-flow-bahagian-setting');
         });
 
+        Route::get('/bdr', 'BdrController@index')->name('bdr.index');
+        Route::post('/bdr', 'BdrController@store')->name('bdr.store');
+        Route::delete('/bdr/{bdr}', 'BdrController@destroy')->name('bdr.destroy');
+
         Route::get('/puasa', 'PuasaController@index')->middleware('can:view-puasa');
         Route::post('/puasa', 'PuasaController@store')->middleware('can:add-puasa');
         Route::delete('/puasa/{puasa}', 'PuasaController@destroy')->middleware('can:delete-puasa');
