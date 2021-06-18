@@ -3,6 +3,7 @@
 namespace App;
 
 use Auth;
+use Carbon\Carbon;
 use App\Base\BaseModel;
 use App\Abstraction\Flowable;
 
@@ -30,6 +31,11 @@ class Department extends BaseModel implements Flowable
         return $this->hasOne(FlowBahagian::class, 'dept_id');
     }
 
+    public function bdr()
+    {
+        return $this->hasMany(BdrSetting::class, 'bahagian_id');
+    }
+
     public static function senaraiDepartment()
     {
         return SELF::when(Auth::user()->username !== env('PCRS_DEFAULT_USER_ADMIN', 'admin'), function ($query) {
@@ -55,5 +61,20 @@ class Department extends BaseModel implements Flowable
     public function updateFlow($request)
     {
         $this->flow()->updateOrCreate([], ['flag' => $request->input('flag'), 'ubah_user_id' => Auth::user()->username]);
+    }
+
+    public function isActiveBdr($from = false, $to = false): bool
+    {
+        if (!$from) {
+            $from = Carbon::now()->format('Y-m-d');
+        }
+
+        if (!$to) {
+            $from = Carbon::now()->format('Y-m-d');
+        }
+
+        return 0 < $this->bdr()
+            ->betweenDates($from, $to)
+            ->count();
     }
 }

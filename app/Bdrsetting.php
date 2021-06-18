@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Bdrsetting extends Model
 {
@@ -18,5 +19,12 @@ class Bdrsetting extends Model
     public function department()
     {
         return $this->belongsTo(Department::class, 'bahagian_id');
+    }
+
+    public function scopeBetweenDates(Builder $query, $from, $to)
+    {
+        return $query
+            ->where("tkhmula", "<=", $from)
+            ->where("tkhtamat", ">=", $to);
     }
 }
