@@ -64,6 +64,11 @@ class Kehadiran extends Eventable
         return $query->whereBetween('checktime', [today()->addHours(4), today()->addHours(13)]);
     }
 
+    public function scopeTodayOut($query)
+    {
+        return $query->whereBetween('checktime', [today()->addHours(4), today()->addHours(24)])->where('checktype', 'O');
+    }
+
     public static function itemEventableNone()
     {
         return [

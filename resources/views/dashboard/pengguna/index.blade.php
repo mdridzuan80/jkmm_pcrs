@@ -29,33 +29,33 @@
                                 @endif
                             </h5>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" id="app-bdr-check-inout">
                             <div class="row">
                                 <div class="col-sm-3 border-right">
                                     <div class="description-block">
-                                        <button type="button" class="btn btn-block btn-success btn-lg">Check-In</button>
+                                        <button type="button" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-3 border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">FOLLOWERS</span>
+                                        <h5 class="description-header">@{{ checkInDate }}</h5>
+                                        <span class="description-text">@{{ checkInTime }}</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <div class="col-sm-3 border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">13,000</h5>
-                                        <span class="description-text">FOLLOWERS</span>
+                                        <h5 class="description-header">@{{ checkOutDate }}</h5>
+                                        <span class="description-text">@{{ checkOutTime }}</span>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
                                 <!-- /.col -->
                                 <div class="col-sm-3">
                                     <div class="description-block">
-                                        <button type="button" class="btn btn-block btn-danger btn-lg">Check-Out</button>
+                                        <button type="button" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>
                                     </div>
                                     <!-- /.description-block -->
                                 </div>
@@ -145,6 +145,30 @@
 @section('scripts')
 <script>
     $(function() {
+
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success(pos) {
+            var crd = pos.coords;
+
+            console.log('Your current position is:');
+            console.log(`Latitude : ${crd.latitude}`);
+            console.log(`Longitude: ${crd.longitude}`);
+            console.log(`More or less ${crd.accuracy} meters.`);
+        }
+
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+
+        navigator.geolocation.getCurrentPosition(success, error, options);
+
+
+
         var acara = {
             jenisAcara: '',
             perkara: '',
@@ -813,6 +837,96 @@
                 ''
             ]);
         }
+
+        var appBdrCheckInOut = new Vue({
+            el: '#app-bdr-check-inout',
+            data: {
+                checkIn: null,
+                checkOut: null,
+            },
+            computed: {
+                isCheckIn: function() {
+                    return (this.checkIn) ? true : false;
+                },
+                isCheckOut: function() {
+                    return (this.checkOut) ? true : false;
+                },
+                checkInDate: function() {
+
+                    if (this.checkIn) {
+                        return moment(this.checkIn.checktime.date).format("DD-MMM-YYYY");
+                    }
+
+                    return "-";
+                },
+                checkInTime: function() {
+
+                    if (this.checkIn) {
+                        return moment(this.checkIn.checktime.date).format("hh:mm A");
+                    }
+
+                    return "-";
+                },
+                checkOutDate: function() {
+
+                    if (this.checkOut) {
+                        return moment(this.checkOut.checktime.date).format("DD-MMM-YYYY");
+                    }
+
+                    return "-";
+                },
+                checkOutTime: function() {
+
+                    if (this.checkOut) {
+                        return moment(this.checkOut.checktime.date).format("hh:mm A");
+                    }
+
+                    return "-";
+                }
+            },
+            methods: {
+                checkingIn() {
+                    if (!this.checkIn) {
+                        $.ajax({
+                            method: "POST",
+                            url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkingin",
+                            success: response => {
+                                this.checkIn = moment(response.checktime).format();
+                            },
+                            error: response => {
+                                console.log(response);
+                            }
+                        });
+                    }
+                },
+                checkingOut() {
+                    if (!this.checkOut) {
+                        $.ajax({
+                            method: "POST",
+                            url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkingout",
+                            success: response => {
+                                this.checkOut = moment(response.checktime).format();
+                            },
+                            error: response => {
+                                console.log(response);
+                            }
+                        });
+                    }
+                }
+            },
+            created() {
+                $.ajax({
+                    url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkinout",
+                    success: response => {
+                        this.checkIn = response.in;
+                        this.checkOut = response.out;
+                    },
+                    error: response => {
+                        console.log(response);
+                    }
+                });
+            },
+        });
     });
 </script>
 @endsection

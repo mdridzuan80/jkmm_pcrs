@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use App\Cuti;
 use App\Acara;
 use App\Anggota;
 use App\Kehadiran;
@@ -40,6 +39,7 @@ class KalendarController extends BaseController
         if (Auth::user()->email == 'admin@internal') {
             return $this->renderView('dashboard.admin.index');
         }
+
 
         return $this->renderView('dashboard.pengguna.index');
     }
@@ -94,6 +94,48 @@ class KalendarController extends BaseController
         }
 
         return view('dashboard.acara.show.acara', compact('events', 'tarikh'));
+    }
+
+    public function rpcCheckInOut(Anggota $profil)
+    {
+        $tarikh = Carbon::parse(Carbon::now()->format('Y-m-d'));
+
+        $events['in'] = $profil->checkIn($tarikh);
+        $events['out'] = $profil->checkOut($tarikh);
+
+        if ($events) {
+            return response()->json($events, 200);
+        }
+
+        return response('Resource not available', 404);
+    }
+
+    public function rpcCheckingIn(Anggota $profil)
+    {
+        $checkingIn = Carbon::now();
+
+        $kehadiran = new Kehadiran;
+        $kehadiran->checktime = $checkingIn;
+        $kehadiran->userid = $profil->userid;
+        $kehadiran->sn = "WEB-IN";
+        $kehadiran->checktype = "I";
+        $kehadiran->save();
+
+        return response()->json($kehadiran, 200);
+    }
+
+    public function rpcCheckingOut(Anggota $profil)
+    {
+        $checkingIn = Carbon::now();
+
+        $kehadiran = new Kehadiran;
+        $kehadiran->checktime = $checkingIn;
+        $kehadiran->userid = $profil->userid;
+        $kehadiran->sn = "WEB-IN";
+        $kehadiran->checktype = "O";
+        $kehadiran->save();
+
+        return response()->json($kehadiran, 200);
     }
 
     private function viewAcara($jenisSumber, $event)

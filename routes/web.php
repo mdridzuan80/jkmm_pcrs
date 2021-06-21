@@ -116,6 +116,9 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::get('/{profil}/acara/create', 'KalendarController@rpcEventAnggotaCreate');
             Route::post('/{profil}/acara', 'KalendarController@rpcEventAnggotaStore');
             Route::get('/{profil}/acara/{tarikh}', 'KalendarController@rpcEventAnggotaShow2');
+            Route::get('/{profil}/checkinout', 'KalendarController@rpcCheckInOut');
+            Route::post('/{profil}/checkingin', 'KalendarController@rpcCheckingIn');
+            Route::post('/{profil}/checkingout', 'KalendarController@rpcCheckingOut');
         });
 
         Route::prefix('laporan')->group(function () {

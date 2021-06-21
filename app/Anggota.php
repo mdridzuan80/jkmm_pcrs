@@ -178,4 +178,18 @@ class Anggota extends BaseModel implements Flowable
 
         return $this->{$method}()->getEventablesByDate($tarikh)->get();
     }
+
+    public function checkIn(Carbon $tarikh)
+    {
+        $today = $this->kehadiran()->today()->first();
+
+        return $today;
+    }
+
+    public function checkOut(Carbon $tarikh)
+    {
+        $today = $this->kehadiran()->todayOut()->get()->last();
+
+        return $today;
+    }
 }
