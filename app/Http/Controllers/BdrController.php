@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BdrSetting;
+use App\Bdrsetting;
 use League\Fractal\Manager;
 use Illuminate\Http\Request;
 use App\Base\BaseController;
