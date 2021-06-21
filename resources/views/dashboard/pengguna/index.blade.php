@@ -854,7 +854,7 @@
                 checkInDate: function() {
 
                     if (this.checkIn) {
-                        return moment(this.checkIn.checktime.date).format("DD-MMM-YYYY");
+                        return moment(this.checkIn).format("DD-MMM-YYYY");
                     }
 
                     return "-";
@@ -862,7 +862,7 @@
                 checkInTime: function() {
 
                     if (this.checkIn) {
-                        return moment(this.checkIn.checktime.date).format("hh:mm A");
+                        return moment(this.checkIn).format("hh:mm A");
                     }
 
                     return "-";
@@ -870,7 +870,7 @@
                 checkOutDate: function() {
 
                     if (this.checkOut) {
-                        return moment(this.checkOut.checktime.date).format("DD-MMM-YYYY");
+                        return moment(this.checkOut).format("DD-MMM-YYYY");
                     }
 
                     return "-";
@@ -878,7 +878,7 @@
                 checkOutTime: function() {
 
                     if (this.checkOut) {
-                        return moment(this.checkOut.checktime.date).format("hh:mm A");
+                        return moment(this.checkOut).format("hh:mm A");
                     }
 
                     return "-";
@@ -891,7 +891,7 @@
                             method: "POST",
                             url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkingin",
                             success: response => {
-                                this.checkIn = moment(response.checktime).format();
+                                this.checkIn = moment(response.checktime.date).format();
                             },
                             error: response => {
                                 console.log(response);
@@ -905,7 +905,7 @@
                             method: "POST",
                             url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkingout",
                             success: response => {
-                                this.checkOut = moment(response.checktime).format();
+                                this.checkOut = moment(response.checktime.date).format();
                             },
                             error: response => {
                                 console.log(response);
@@ -918,8 +918,8 @@
                 $.ajax({
                     url: base_url + "rpc/kalendar/{{Auth::user()->anggota_id}}/checkinout",
                     success: response => {
-                        this.checkIn = response.in;
-                        this.checkOut = response.out;
+                        this.checkIn = response.in ? moment(response.in.checktime.date).format() : null;
+                        this.checkOut = response.out ? moment(response.out.checktime.date).format() : null;
                     },
                     error: response => {
                         console.log(response);
