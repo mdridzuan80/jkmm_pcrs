@@ -33,7 +33,7 @@ class Department extends BaseModel implements Flowable
 
     public function bdr()
     {
-        return $this->hasMany(BdrSetting::class, 'bahagian_id');
+        return $this->hasMany(Bdrsetting::class, 'bahagian_id');
     }
 
     public static function senaraiDepartment()
