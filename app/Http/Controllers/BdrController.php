@@ -12,7 +12,7 @@ use League\Fractal\Resource\Collection;
 
 class BdrController extends BaseController
 {
-    public function index(BdrSetting $bdr, Manager $fractal)
+    public function index(Bdrsetting $bdr, Manager $fractal)
     {
         $resource = new Collection($bdr->byTahun(), new BdrTransformer);
         $transform = $fractal->createData($resource);
@@ -20,7 +20,7 @@ class BdrController extends BaseController
         return response()->json($transform->toArray());
     }
 
-    public function store(Request $request, BdrSetting $bdr, Manager $fractal)
+    public function store(Request $request, Bdrsetting $bdr, Manager $fractal)
     {
         $bdr->bahagian_id = $request->input("bahagian_id");
         $bdr->tkhmula = $request->input("tkhMula");
@@ -33,7 +33,7 @@ class BdrController extends BaseController
         return response()->json($transform->toArray(), 201);
     }
 
-    public function destroy(BdrSetting $bdr)
+    public function destroy(Bdrsetting $bdr)
     {
         $bdr->delete();
         return response('Success', 200);
