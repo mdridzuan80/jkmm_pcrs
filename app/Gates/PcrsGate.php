@@ -13,16 +13,16 @@ class PcrsGate
         Gate::define('view-anggota', $this->minPrivilege(Role::KETUA_KERANI));
 
         // Profil
-        Gate::define('view-profil', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-profil', $this->minPrivilege(Role::PENGGUNA));
         Gate::define('edit-profil', $this->minPrivilege(Role::KETUA_KERANI));
 
         // Waktu Bekerja
-        Gate::define('view-waktu_bekerja', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-waktu_bekerja', $this->minPrivilege(Role::PENGGUNA));
         Gate::define('add-waktu_bekerja', $this->minPrivilege(Role::KETUA_KERANI));
         Gate::define('delete-waktu_bekerja', $this->minPrivilege(Role::KETUA_KERANI));
 
         // Penilai
-        Gate::define('view-penilai', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-penilai', $this->minPrivilege(Role::PENGGUNA));
         Gate::define('edit-penilai', $this->minPrivilege(Role::KETUA_KERANI));
 
         // Pengguna
@@ -33,11 +33,11 @@ class PcrsGate
         Gate::define('delete-peranan', $this->minPrivilege(Role::KETUA_KERANI));
 
         // Base Bahagian
-        Gate::define('view-base-bahagian', $this->minPrivilege(Role::ADMIN));
+        Gate::define('view-base-bahagian', $this->minPrivilege(Role::PENGGUNA));
         Gate::define('edit-base-bahagian', $this->minPrivilege(Role::ADMIN));
 
         //profil flow
-        Gate::define('view-flow-profil', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-flow-profil', $this->minPrivilege(Role::PENGGUNA));
         Gate::define('edit-flow-profil', $this->minPrivilege(Role::KETUA_KERANI));
 
         //Laporan
@@ -63,6 +63,11 @@ class PcrsGate
         Gate::define('delete-puasa', $this->minPrivilege(Role::SUPER_ADMIN));
 
         Gate::define('view-kelulusan', $this->kelulusan());
+		
+		Gate::define('view-acara', $this->acara());
+		
+		// Senarai Permohonan JTC
+		Gate::define('view-permohonan_jtc', $this->minPrivilege(Role::PENGGUNA));
     }
 
     private function minPrivilege($minPriv)
@@ -76,6 +81,13 @@ class PcrsGate
     {
         return function ($user) {
             return ($user->username == 'admin') ? false : $user->hasKelulusanSubmitter();
+        };
+    }
+
+    private function acara()
+    {
+        return function ($acaras) {
+            return $acaras;
         };
     }
 }

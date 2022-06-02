@@ -19,6 +19,7 @@
                 <div class="form-group">
                     <select class="form-control input-sm" name="comPeranan" style="padding-right: 5px;">
                         <option value="0" >Peranan</option>
+                        <option value="3" >Ketua Jabatan/Unit</option>
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}" >{{ $role->name }}</option>
                         @endforeach

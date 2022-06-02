@@ -2,9 +2,11 @@
     <!-- Logo -->
     <a href="{{ route('dashboard') }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>{{ env('APP_SHORT_NAME') }}</b></span>
+        <!--<span class="logo-mini"><b>{{ env('APP_SHORT_NAME') }}</b></span>-->
+        <span class="logo-mini"><b><img src="{{ asset('images/logo_pcrs.png') }}" style="width:60% !important; height:auto !important;" alt="PCRS"></b></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>{{ env('APP_SHORT_NAME') }}</b></span>
+        <!--<span class="logo-lg"><b>{{ env('APP_SHORT_NAME') }}</b></span>-->
+        <span class="logo-lg"><b><img src="{{ asset('images/logo_pcrs.png') }}" style="width:60% !important; height:auto !important;" alt="PCRS"></b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

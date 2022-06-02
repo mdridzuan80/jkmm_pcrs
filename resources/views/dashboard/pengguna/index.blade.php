@@ -11,6 +11,8 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
+        
+        <!--
         @if (Auth::user()->email != env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal') && Auth::user()->xtraAnggota->baseDepartment->isActiveBdr())
         <div class="col-md-12">
             <div class="box box-primary">
@@ -19,7 +21,7 @@
                 </div>
                 <div class="box-body">
                     <div class="card card-widget widget-user">
-                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <?php //Add the bg color to the header using any of the bg-* classes ?>
                         <div class="widget-user-header bg-info">
                             <h3 class="widget-user-username">{{(Auth::user()->xtraAnggota) ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}</h3>
                             <h5 class="widget-user-desc">@if (Auth::user()->email === env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'))
@@ -35,39 +37,42 @@
                                     <div class="description-block">
                                         <button type="button" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>
                                     </div>
-                                    <!-- /.description-block -->
+                                    <?php // /.description-block ?>
                                 </div>
-                                <!-- /.col -->
+                                <?php // /.col  ?>
                                 <div class="col-sm-3 border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">@{{ checkInDate }}</h5>
                                         <span class="description-text">@{{ checkInTime }}</span>
                                     </div>
-                                    <!-- /.description-block -->
+                                    <?php // /.description-block ?>
                                 </div>
                                 <div class="col-sm-3 border-right">
                                     <div class="description-block">
                                         <h5 class="description-header">@{{ checkOutDate }}</h5>
                                         <span class="description-text">@{{ checkOutTime }}</span>
                                     </div>
-                                    <!-- /.description-block -->
+                                    <?php // /.description-block ?>
                                 </div>
-                                <!-- /.col -->
+                                <?php // /.col ?>
                                 <div class="col-sm-3">
                                     <div class="description-block">
                                         <button type="button" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>
                                     </div>
-                                    <!-- /.description-block -->
+                                    <?php // /.description-block ?>
                                 </div>
-                                <!-- /.col -->
+                                <?php // /.col ?>
                             </div>
-                            <!-- /.row -->
+                            <?php // /.row ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        @endif
+        @endif        
+        -->
+        
+        
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -88,13 +93,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-default" style="display: none;">
+    <div class="modal fade" id="modal-default-timeslip" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: steelblue; color: white;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH TIMESLIP</h4>
+                    <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> MOHON TIMESLIP (URUSAN PERIBADI)</h4>
                 </div>
                 <div class="modal-body">
                     <h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>
@@ -111,7 +116,7 @@
                 <div class="modal-header" style="background-color: steelblue; color: white;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH CATATAN</h4>
+                    <h4 class="modal-title"><i class="fa fa-fw fa-calendar-plus-o"></i> MOHON CATATAN (URUSAN RASMI)</h4>
                 </div>
                 <div class="modal-body">
                     <h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>
@@ -200,15 +205,15 @@
             showNonCurrentDates: false,
             customButtons: {
                 timeslip: {
-                    text: 'Timeslip',
+                    text: 'Timeslip (Peribadi)',
                     click: function() {
-                        $('#modal-default').modal({
+                        $('#modal-default-timeslip').modal({
                             backdrop: 'static',
                         });
                     }
                 },
                 catatan: {
-                    text: 'Catatan',
+                    text: 'Catatan (Rasmi)',
                     click: function() {
                         $('#modal-default-catatan').modal({
                             backdrop: 'static',
@@ -218,7 +223,7 @@
                 laporan: {
                     text: 'Laporan Bulanan',
                     click: function() {
-                        exportPDF(
+                        exportPDF_laporanbulananDashboard(
                             _.filter(gEvents.data, {
                                 'table': 'final'
                             })
@@ -273,7 +278,7 @@
             var modalBody = $(this).find('.modal-body');
 
             $.ajax({
-                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create',
+                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create_default',
                 success: function(data, textStatus, jqXHR) {
                     modalBody.html(data);
                     $('#txtMasaMula').datetimepicker({
@@ -304,36 +309,35 @@
             });
         });
 
-        $('#modal-default').on('hidden.bs.modal', function(e) {
-            e.preventDefault();
-            $(this).find('.modal-title').html('<i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA');
-            $(this).find('.modal-body').html('<h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>');
-        });
-
-        $('#modal-default').on('click', 'input[type="radio"]', function(e) {
-            acara.jenisAcara = e.target.value;
-        });
-
-        $('#modal-default').on('keyup', '#txtPerkara', function(e) {
+        
+		
+            
+		
+		
+		$('#modal-default').on('change', '#txtPerkara', function(e) {
             acara.perkara = e.target.value;
-            if (!e.target.value) {
-                return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA');
-            }
-
-            return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar"></i>' + e.target.value.toUpperCase());
         });
+		
 
         $('#modal-default').on('change', '#txtKeterangan', function(e) {
             acara.keterangan = e.target.value;
         });
-
-        $('#modal-default-catatan').on('keyup', '#txtPerkara', function(e) {
+		
+            
+		
+		
+		$('#modal-default-timeslip').on('change', '#txtPerkara', function(e) {
             acara.perkara = e.target.value;
-            if (!e.target.value) {
-                return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar-plus-o"></i> TAMBAH ACARA');
-            }
-
-            return $('#modal-default .modal-title').html('<i class="fa fa-fw fa-calendar"></i>' + e.target.value.toUpperCase());
+        });
+		
+		$('#modal-default-catatan').on('change', '#txtPerkara', function(e) {
+            acara.perkara = e.target.value;
+        });
+		
+		
+		
+		$('#modal-default-timeslip').on('change', '#txtKeterangan', function(e) {
+            acara.keterangan = e.target.value;
         });
 
         $('#modal-default-catatan').on('change', '#txtKeterangan', function(e) {
@@ -450,13 +454,48 @@
             var bulan = tkhSemasaView.format('MM');
             var tahun = tkhSemasaView.format('YYYY');
         });
+		
+		$('#modal-default-timeslip').on('show.bs.modal', function(e) {
+            var modalBody = $(this).find('.modal-body');
+
+            $.ajax({
+                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create_timeslip',
+                success: function(data, textStatus, jqXHR) {
+                    modalBody.html(data);
+                    $('#txtMasaMula').datetimepicker({
+                        format: 'DD/MM/YYYY h:mm A'
+                    });
+                    $('#txtMasaTamat').datetimepicker({
+                        useCurrent: false, //Important! See issue #1075
+                        format: 'DD/MM/YYYY h:mm A'
+                    });
+                    $("#txtMasaMula").on("dp.change", function(e) {
+                        acara.masaMula = e.date.format('YYYY-MM-DD HH:mm:00.000');
+                        $('#txtMasaTamat').data("DateTimePicker").minDate(e.date);
+                    });
+                    $("#txtMasaTamat").on("dp.change", function(e) {
+                        var duration = moment.duration(moment(e.date.format('YYYY-MM-DD HH:mm:00.000')).diff(acara.masaMula));
+                        duration = duration.asHours();
+
+                        if (duration >= 4) {
+                            e.target.value = '';
+                            alert('Tempoh masa lebih 4 jam');
+                            return;
+                        }
+
+                        acara.masaTamat = e.date.format('YYYY-MM-DD HH:mm:00.000');
+                        $('#txtMasaMula').data("DateTimePicker").maxDate(e.date);
+                    });
+                },
+            });
+        });
 
 
         $('#modal-default-catatan').on('show.bs.modal', function(e) {
             var modalBody = $(this).find('.modal-body');
 
             $.ajax({
-                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create',
+                url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara/create_catatan',
                 success: function(data, textStatus, jqXHR) {
                     modalBody.html(data);
                     $('#txtMasaMula').datetimepicker({
@@ -476,6 +515,61 @@
                         $('#txtMasaMula').data("DateTimePicker").maxDate(e.date);
                     });
                 },
+            });
+        });
+		
+		
+		
+		$('#modal-default-timeslip').on('submit', '#frm-acara', function(e) {
+            e.preventDefault();
+
+            swal({
+                title: 'Amaran!',
+                text: 'Anda pasti untuk menambah acara ini?',
+                type: 'warning',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                confirmButtonText: 'Ya!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !swal.isLoading(),
+                preConfirm: () => {
+                    return new Promise((resolve, reject) => {
+                        acara.jenisAcara = '{{ $Acara::KATEGORI_TIMESLIP }}';
+                        $.ajax({
+                            method: 'POST',
+                            data: acara,
+                            url: base_url + 'rpc/kalendar/{{Auth::user()->anggota_id}}/acara',
+                            success: function(acara, extStatus, jqXHR) {
+                                resolve({
+                                    'acara': acara.data
+                                });
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                reject(textStatus);
+                            },
+                            statusCode: login()
+                        });
+                    });
+                }
+            }).then((result) => {
+                console.log(result.value);
+                if (result.value) {
+                    //cal.fullCalendar('refetchEvents');
+                    cal.fullCalendar('renderEvent', result.value.acara);
+                    $('#modal-default-timeslip').modal('hide');
+
+                    swal({
+                        title: 'Berjaya!',
+                        text: 'Maklumat telah disimpan',
+                        type: 'success'
+                    });
+                }
+            }).catch((error) => {
+                swal({
+                    title: 'Ralat!',
+                    text: "Operasi tidak berjaya!.\nSila berhubung dengan Pentadbir sistem",
+                    type: 'error'
+                });
             });
         });
 
@@ -624,7 +718,14 @@
             })
         }
 
-        function exportPDF(result) {
+        
+		function exportPDF_laporanbulananDashboard(result) {
+			
+			
+		}
+		
+		
+		function exportPDF(result) {
             try {
                 var doc = new jsPDF('p', 'pt', 'a4');
                 var head = [
@@ -928,5 +1029,63 @@
             },
         });
     });
+	
+	
+
+</script>
+
+<script>
+  $(function() {
+    $(".btn-hapus-acara").on('click', function(e){
+      e.preventDefault();
+      
+      penghapusan(this,'{{ $Acara::STATUS_PERMOHONAN_BATAL }}')
+    });
+
+    function penghapusan(el,status) {
+      var id = $(el).data('id');
+
+      swal({
+          title: 'Amaran!',
+          text: 'Anda pasti untuk melaksanakan tindakan ini?',
+          type: 'warning',
+          cancelButtonText: 'Tidak',
+          showCancelButton: true,
+          confirmButtonText: 'Ya!',
+          showLoaderOnConfirm: true,
+          allowOutsideClick: () => !swal.isLoading(),
+          preConfirm: (email) => {
+              return new Promise((resolve,reject) => {
+                    $.ajax({
+                      method: 'POST',
+                      data: {'_method':'PUT', status: status},
+                      url: base_url+'rpc/justifikasi/'+id,
+                      success: function(data, extStatus, jqXHR) {
+                          resolve({value: true});
+                      },
+                      error: function(jqXHR, textStatus, errorThrown) {
+                          reject(textStatus);
+                      },
+                      statusCode: login()
+                  });
+              })
+          }
+      }).then((result) => {
+          if (result.value) {
+              swal({
+                  title: 'Berjaya!',
+                  text: 'Permohonan telah dibatalkan',
+                  type: 'success'
+              }).then(() => $(el).parent().parent().parent().hide());
+          }
+      }).catch(function (error) {
+          swal({
+              title: 'Ralat!',
+              text: 'Pembatalan permohonan tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+              type: 'error'
+          });
+      });
+    }
+  });
 </script>
 @endsection

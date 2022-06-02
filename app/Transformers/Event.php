@@ -43,6 +43,7 @@ class Event extends TransformerAbstract
             'checkIn' => $event['check_in'] ?? null,
             'checkOut' => $event['check_out'] ?? null,
             'table' => $event['table_name'],
+			'keterangan' => $event['keterangan'] ?? null,
             'justifikasi' => $event['justifikasi'] ?? null,
             'cuti' => $event['cuti'] ?? null,
         ];
@@ -71,7 +72,11 @@ class Event extends TransformerAbstract
             return $checkin . $checkout;
         }
 
-        return $this->event['title'];
+        if ($this->event['table_name'] == 'acara') {
+            return $this->event['keterangan'];           
+        }
+		
+		return $this->event['title'];
     }
 
     private function subTitleCheckin($icon = '')

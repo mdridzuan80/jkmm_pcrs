@@ -6,7 +6,21 @@
             <tbody>
                 <tr>
                     <td class="col-md-3"><b>PERKARA</b></td>
-                    <td><input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required autocomplete="off"></td>
+                    <td>
+                    
+                    <!--<input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required autocomplete="off">-->
+                    
+                    <select id="txtPerkara" class="form-control" type="text" name="txtPerkara" required>
+                        <option {{ (old('txtPerkara') === 'Klinik/ Hospital') ? 'selected':'' }} >Klinik/ Hospital</option>
+                        <option {{ (old('txtPerkara') === 'Urusan Peribadi') ? 'selected':'' }} >Urusan Peribadi</option>
+                        <option {{ (old('txtPerkara') === 'Mesyuarat') ? 'selected':'' }} >Mesyuarat</option>
+                        <option {{ (old('txtPerkara') === 'Kursus') ? 'selected':'' }} >Kursus</option>
+                        <option {{ (old('txtPerkara') === 'Tugasan Luar') ? 'selected':'' }} >Tugasan Luar</option>
+                        <option {{ (old('txtPerkara') === 'Bercuti') ? 'selected':'' }} >Bercuti</option>
+                        <option {{ (old('txtPerkara') === 'Lain-Lain') ? 'selected':'' }} >Lain-Lain</option>
+                    </select>
+                    
+                    </td>
                 </tr>
                 <tr>
                     <td><b>MASA</b></td>

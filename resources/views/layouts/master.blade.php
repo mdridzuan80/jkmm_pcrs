@@ -47,6 +47,17 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  
+<!--datatable!-->
+
+<link rel="stylesheet" href="{{ asset('datatable/css/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('datatable/css/buttons.dataTables.min.css') }}">
+
+<!--
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+-->
+<!--tutup datatable !-->
+  
 
   <style>
     .table-fixed thead {
@@ -64,6 +75,12 @@
     float: left;
     border-bottom-width: 0;
     }
+	
+	
+	div.dataTables_wrapper {
+        margin-bottom: 3em;
+    }
+	
 </style>
 
 </head>
@@ -204,6 +221,21 @@
     });
   })
 </script>
+<!--
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+-->
+<script src="{{ asset('datatable/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('datatable/js/dataTables.buttons.min.js') }}"></script>
+<script src="{{ asset('datatable/js/buttons.flash.min.js') }}"></script>
+<script src="{{ asset('datatable/js/jszip.min.js') }}"></script>
+<script src="{{ asset('datatable/js/pdfmake.min.js') }}"></script>
+<script src="{{ asset('datatable/js/vfs_fonts.js') }}"></script>
+<script src="{{ asset('datatable/js/buttons.html5.min.js') }}"></script>
+<script src="{{ asset('datatable/js/buttons.print.min.js') }}"></script>
+<script src="{{ asset('datatable/js/dataTables.rowsGroup.js') }}"></script>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>-->
+
 
 @yield('scripts')
 

@@ -11,6 +11,7 @@ abstract class Eventable extends BaseModel
     const CURRENTATT = 'current';
     const CUTI = 'cuti';
     const ACARA = 'acara';
+    const CHECKINOUT = 'checkinout';
 
     public function scopeGetEventablesByDate($query, Carbon $tarikh)
     {

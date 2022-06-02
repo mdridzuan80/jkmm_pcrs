@@ -76,12 +76,51 @@ class XtraAnggota extends Model
         return $this->hasMany(Acara::class, 'pelulus_id');
     }
 
+    public function pemohonAcaraIndividu()
+    {
+        return $this->hasMany(Acara::class, 'anggota_id');
+    }
+
     //----End Relationship-----
 
-    public function scopeKelulusanJustifikasi()
+    public function scopeKelulusanJustifikasi($query, $kategori_acara='0')
     {
-        return $this->pemohonJustifikasi()->where('flag_kelulusan', Acara::STATUS_PERMOHONAN_MOHON)->with('finalAttendance.anggota');
+		
+
+        if($kategori_acara == '0'){
+			return $this->pemohonJustifikasi()
+			->where('flag_kelulusan', Acara::STATUS_PERMOHONAN_MOHON)
+			->with('finalAttendance.anggota')
+			->orderBy('tarikh_mula', 'desc');
+		}
+		return $this->pemohonJustifikasi()
+			->where('flag_kelulusan', Acara::STATUS_PERMOHONAN_MOHON)
+			->where('kategori', $kategori_acara)
+			->with('finalAttendance.anggota')
+			->orderBy('tarikh_mula', 'desc');
     }
+	
+	
+	public function scopePermohonan_jtc($query, $kategori_acara='0', $txtTarikhMula='0', $txtTarikhAkhir='0')
+    {
+		
+		$txtTarikhMula_format = $txtTarikhMula.' 00:00:00';
+		$txtTarikhAkhir_format = $txtTarikhAkhir.' 23:59:59';
+
+        if($kategori_acara == '0'){
+			return $this->pemohonAcaraIndividu()->with('finalAttendance.anggota')
+			->where('tarikh_mula', '>=', $txtTarikhMula_format)
+			->where('tarikh_mula', '<=', $txtTarikhAkhir_format)
+			->orderBy('tarikh_mula', 'desc');
+		}
+		return $this->pemohonAcaraIndividu()
+			->where('kategori', $kategori_acara)
+			->where('tarikh_mula', '>=', $txtTarikhMula_format)
+			->where('tarikh_mula', '<=', $txtTarikhAkhir_format)
+			->with('finalAttendance.anggota')
+			->orderBy('tarikh_mula', 'desc');
+    }
+	
 
     public static function setupXtra($profil, User $user)
     {
@@ -126,4 +165,52 @@ class XtraAnggota extends Model
 
         return $kad->warna_kod ?? Warna::KUNING;
     }
+	
+	public function scopelist_nama_ikutdepartment($query, $departmentDisplayId, $comSenPPP)
+    {    
+	
+		if($comSenPPP == '0'){
+			
+			//return $query
+			//->select ('*')	
+			return $query->leftjoin('userinfo','xtra_userinfo.anggota_id','=','userinfo.userid')
+			->select ('*','userinfo.Badgenumber as badgenumberr')	
+			->where('pcrs.xtra_userinfo.dept_id', '=', $departmentDisplayId)
+			->get();	
+		
+		}else{
+			
+			//return $query
+			//return $query
+			//->select ('*')
+			return $query->leftjoin('userinfo','xtra_userinfo.anggota_id','=','userinfo.userid')
+			->leftjoin('departments','departments.deptid','=','xtra_userinfo.dept_id')
+			
+			->select ('*','userinfo.Badgenumber as badgenumberr')		
+			//->where('dept_id', '=', $departmentDisplayId)
+			->where('pcrs.xtra_userinfo.anggota_id', '=', $comSenPPP)
+			->get();	
+		
+		}			
+		
+    } 
+	
+	
+	
+	
+	public function scopelist_nama_ikutdepartmentALL($query, $departmentDisplayId, $comSenPPP)
+    {    
+			
+			//return $query
+			//->select ('*')	
+			return $query->leftjoin('userinfo','xtra_userinfo.anggota_id','=','userinfo.userid')
+			->leftjoin('departments','xtra_userinfo.basedept_id','=','departments.deptid')
+			->select ('*','userinfo.Badgenumber as badgenumberr')	
+			->where('pcrs.xtra_userinfo.dept_id', '=', $departmentDisplayId)
+			->get();	
+		
+			
+		
+    } 
+	
 }

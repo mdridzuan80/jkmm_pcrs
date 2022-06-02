@@ -13,7 +13,23 @@
         @can('view-kelulusan')
         <li class="{{ pcrsMenuActiveCondition('kelulusancontroller_index', $collection->get('activeMenu')) }}">
           <a href="{{ route('kelulusan') }}">
-            <i class="fa fa-commenting"></i></i> <span>Kelulusan Justifikasi</span>
+            <i class="fa fa-commenting"></i></i> <span>Kelulusan Permohonan</span>
+          </a>
+        </li>
+        @endcan
+        <!--
+        @can('view-acara')
+        <li class="{{ pcrsMenuActiveCondition('acaracontroller_index', $collection->get('activeMenu')) }}">
+          <a href="{{ route('kelulusan.list_acara') }}">
+            <i class="fa fa-list"></i></i> <span>Senarai Acara</span>
+          </a>
+        </li>
+        @endcan
+        -->
+        @can('view-permohonan_jtc')
+        <li class="{{ pcrsMenuActiveCondition('permohonan_jtccontroller_index', $collection->get('activeMenu')) }}">
+          <a href="{{ route('permohonan_jtc.permohonan_jtc') }}">
+            <i class="fa fa-list"></i></i> <span>Senarai Permohonan</span>
           </a>
         </li>
         @endcan
@@ -39,6 +55,18 @@
         </li>
         @endcan
       </ul>
+      
+      <br />
+      
+      <div class="row">
+          <div class="col-md-12" align="center">
+          
+          	<a class="btn btn-primary" href="{{ route('manual') }}">MANUAL SISTEM</a>
+          
+          </div>
+      </div>
+      
+      
     </section>
     <!-- /.sidebar -->
   </aside>

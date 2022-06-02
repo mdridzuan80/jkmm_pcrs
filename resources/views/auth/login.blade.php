@@ -36,6 +36,7 @@
 <div class="login-box">
   <div class="login-logo">
     <img src="{{ asset('dist/img/logo_dalam.png') }}" alt="Logo Rasmi PCRS">
+                        <span style="font-size:14px; color:rgba(0,0,0,1); vertical-align:bottom; font-weight:bold;">VERSI 2.0</span>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -76,8 +77,89 @@
     </form>
   </div>
   <!-- /.login-box-body -->
+  
+  <br>
+
+<div class="row">
+
+<div class="col-md-12">
+<div style="text-align:justify;">
+*Sekiranya anda tidak dapat log-masuk ke dalam Sistem PCRS Versi 2.0, sila berhubung dengan Pentadbir PCRS Jabatan/ Bahagian masing-masing untuk proses pendaftaran akaun PCRS 2.0.
+</div>
+
+<br>
+<div>
+Pautan ke PCRS Versi 1.0: <a href="https://pcrsold.melaka.gov.my" target="_blank">https://pcrsold.melaka.gov.my</a>
+</div>
+</div>
+
+</div>
 </div>
 <!-- /.login-box -->
+
+
+
+        <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content" style="padding:30px !important;">
+                <div class="modal-body">
+                    <div class="text-center mb-3" style="margin-top:10px; margin-bottom:20px;">
+                        <img src="{{ asset('images/jata_melaka_100.png') }}" style="width:auto; height: 80px; margin-bottom: 10px">
+                        
+                        &nbsp;
+                        
+                        <img src="{{ asset('images/logo_pcrs.png') }}" style="width:auto; height: 70px; margin-bottom: 10px">
+                        
+                    </div>
+                    
+                    
+
+                    <div align="center" style="margin-bottom:40px; font-size:20px; font-weight:bold;">
+                        PUNCTUALITY CASCADING REPORTING SYSTEM (PCRS) VERSI 2.0
+                    </div>
+                    
+                    <div align="justify">
+                    
+                    	<ol style="padding-left:15px !important;">
+                        
+                        <li style="margin-bottom:10px;">Bermula  Jun 2022, PCRS Versi 2.0 akan digunakan bagi menggantikan PCRS Versi 1.0.</li>
+                        <li style="margin-bottom:10px;">Sekiranya anda <b>tidak berjaya log-masuk</b> ke dalam Sistem PCRS 2.0, sila berhubung dengan <b>Pentadbir PCRS Jabatan/ Bahagian masing-masing</b> .</li>
+                        <li style="margin-bottom:10px;">Anda juga boleh merujuk kepada Manual Pengguna yang disediakan atau mengajukan pertanyaan lanjut terus kepada Pentadbir PCRS Jabatan/ Bahagian masing-masing.</li>
+                        <li style="margin-bottom:10px;">Bagi pengurusan data rekod kehadiran <b>bulan Mei 2022 dan sebelumnya</b>, sila gunakan PCRS Versi 1.0. Bagi pengurusan data rekod kehadiran <b>bulan Jun 2022 dan seterusnya</b>, sila gunakan PCRS Versi 2.0.</li>
+                        <li style="margin-bottom:10px;">Untuk mengakses Sistem PCRS Versi 1.0, sila klik pautan berikut: <a href="https://pcrsold.melaka.gov.my" target="_blank">https://pcrsold.melaka.gov.my</a></li>
+                        <li style="margin-bottom:10px;">Disertakan <b>Manual Pengguna</b> PCRS 2.0 untuk rujukan:</li>
+                        
+                        	<ul>
+                            <li><a href="{{ asset('images/manual/MANUAL_PCRS_-_PENGGUNA_v2.0.pdf') }}" target="_blank">Manual Pengguna</a></li>
+                            <li><a href="{{ asset('images/manual/MANUAL_PCRS_-_PENTADBIR_BAHAGIAN_v2.0.pdf') }}" target="_blank">Manual Pentadbir Bahagian</a></li>
+                            <li><a href="{{ asset('images/manual/MANUAL_PCRS_-_KETUA_BAHAGIAN_v2.0.pdf') }}" target="_blank">Manual Ketua Bahagian</a></li>
+                            </ul>
+                        
+                        </ol>
+                    
+                    </div>
+                    
+                    
+                    <br>                    
+                    <br>
+
+                    <p>
+                    Sekian, Terima Kasih
+                    <br><br>
+                    Pentadbir Sistem PCRS 2.0
+                    <br>
+                    <!--ext: 7784-->
+                    </p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 <!-- jQuery 3 -->
 <script src="{{ asset('bower_components/jquery/dist/jquery.min.js') }}"></script>
@@ -107,5 +189,25 @@
         });
     });
 </script>
+
+<script>
+    
+	$(window).load(function()
+	{
+		$('#welcomeModal_loadFirst').modal('show');
+	});
+
+</script>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		setTimeout(function() {
+			$("#welcomeModal").modal('show');
+		}, 500);
+	});
+</script>
+
+
 </body>
 </html>

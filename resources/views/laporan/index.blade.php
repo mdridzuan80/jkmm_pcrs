@@ -24,10 +24,15 @@
                             <tr>
                                 <td width="1">1.</td>
                                 <td><a href="/laporan/harian"> Laporan Harian</a></td>
+                                <!--<td><a href="/laporan/harian"> Laporan Harian</a></td>-->
                             </tr>
                             <tr>
                                 <td width="1">2.</td>
                                 <td><a href="{{ route('laporan.bulanan') }}"> Laporan Bulanan</a></td>
+                            </tr>
+                            <tr>
+                                <td width="1">3.</td>
+                                <td><a href="/laporan/rekodkehadiran"> Laporan Rekod Kehadiran</a></td>
                             </tr>
                         </table>
                     </div>

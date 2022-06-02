@@ -15,7 +15,8 @@
                 <td>{{ ($senAnggota->currentpage()-1) * $senAnggota->perpage() + $loop->index + 1 }}</td>
                 <td>{!! ($anggota->user) ? '<i title="Login" class="fa"><img src="'.asset('images/icons/icon_key.gif').'"></i>' : '' !!}</td>
                 <td>{{ $anggota->badgenumber }}</td>
-                <td><a id="detail-info" href="#">{{ $anggota->nama }}</a></td>
+                <!--<td><a id="detail-info" href="#">{{ $anggota->nama }}</a></td>-->
+                <td>{{ $anggota->nama }}</td>
                 <td>{{ $anggota->nokp }}</td>
                 <td>{{ $anggota->jawatan }}</td>
             </tr>
