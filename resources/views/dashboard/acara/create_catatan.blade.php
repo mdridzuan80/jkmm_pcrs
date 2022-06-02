@@ -7,18 +7,19 @@
                 <tr>
                     <td class="col-md-3"><b>PERKARA</b></td>
                     <td>
-                    
-                    <!--<input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required autocomplete="off">-->
-                    
-                    <select id="txtPerkara" class="form-control" type="text" name="txtPerkara" required autocomplete="off">
-                        <option value="0">Sila pilih...</option>
-                        <option {{ (old('txtPerkara') === 'Mesyuarat') ? 'selected':'' }} >Mesyuarat</option>
-                        <option {{ (old('txtPerkara') === 'Kursus') ? 'selected':'' }} >Kursus</option>
-                        <option {{ (old('txtPerkara') === 'Tugasan Luar') ? 'selected':'' }} >Tugasan Luar</option>
-                        <option {{ (old('txtPerkara') === 'Bercuti') ? 'selected':'' }} >Bercuti</option>
-                        <option {{ (old('txtPerkara') === 'Lain-Lain') ? 'selected':'' }} >Lain-Lain</option>
-                    </select>
-                    
+
+                        <!--<input id="txtPerkara" class="form-control" type="text" name="txtPerkara" placeholder="Perkara"  required autocomplete="off">-->
+
+                        <select id="txtPerkaraC" class="form-control" type="text" name="txtPerkara" required
+                            autocomplete="off">
+                            <option value="0">Sila pilih...</option>
+                            <option {{ old('txtPerkara') === 'Mesyuarat' ? 'selected' : '' }}>Mesyuarat</option>
+                            <option {{ old('txtPerkara') === 'Kursus' ? 'selected' : '' }}>Kursus</option>
+                            <option {{ old('txtPerkara') === 'Tugasan Luar' ? 'selected' : '' }}>Tugasan Luar</option>
+                            <option {{ old('txtPerkara') === 'Bercuti' ? 'selected' : '' }}>Bercuti</option>
+                            <option {{ old('txtPerkara') === 'Lain-Lain' ? 'selected' : '' }}>Lain-Lain</option>
+                        </select>
+
                     </td>
                 </tr>
                 <tr>
@@ -27,10 +28,12 @@
                         <table style="width: 100%">
                             <tr>
                                 <td style="padding-right: 5px">
-                                    <input id="txtMasaMula" class="form-control" type="text" name="txtMasaMula" placeholder="Masa Mula"  required autocomplete="off">
+                                    <input id="txtMasaMulaC" class="form-control" type="text" name="txtMasaMula"
+                                        placeholder="Masa Mula" required autocomplete="off">
                                 </td>
                                 <td>
-                                    <input id="txtMasaTamat" class="form-control" type="text" name="txtMasaTamat" placeholder="Masa Tamat"  required autocomplete="off">
+                                    <input id="txtMasaTamatC" class="form-control" type="text" name="txtMasaTamat"
+                                        placeholder="Masa Tamat" required autocomplete="off">
                                 </td>
                             </tr>
                         </table>
@@ -38,12 +41,16 @@
                 </tr>
                 <tr>
                     <td><b>KETERANGAN</b></td>
-                    <td><textarea id="txtKeterangan" class="form-control" rows="3" name="txtKeterangan" placeholder="Perkara..." required autocomplete="off"></textarea></td>
+                    <td>
+                        <textarea id="txtKeteranganC" class="form-control" rows="3" name="txtKeterangan" placeholder="Perkara..." required
+                            autocomplete="off"></textarea>
+                    </td>
                 </tr>
-            </body>
+                </body>
         </table>
         <br>
         <button class="btn btn-success pull-right btn-acara-simpan" type="submit">SIMPAN</button>
-        <button id="btn-batal" type="button" class="btn btn-link pull-right" style="color:#dd4b39;" data-dismiss="modal" >BATAL</button>
+        <button id="btn-batalC" type="button" class="btn btn-link pull-right" style="color:#dd4b39;"
+            data-dismiss="modal">BATAL</button>
     </form>
 </div>
