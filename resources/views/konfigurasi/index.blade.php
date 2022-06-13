@@ -665,6 +665,10 @@
                 });
             });
         });
+		
+		
+
+		
 
         $('#modal-shift-edit').on('show.bs.modal', function(e) {
             $("body").css("cursor", "progress");

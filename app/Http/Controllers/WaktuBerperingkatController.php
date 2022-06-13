@@ -19,7 +19,12 @@ class WaktuBerperingkatController extends BaseController
 {
     public function rpcIndex(Anggota $profil)
     {
-        $shifts = Shift::all();
+        
+		//$list_acara = Acara::orderBy('id', 'desc')->get();
+		
+		$shifts = Shift::where('status', 'aktif')
+		->orderBy('susunan', 'asc')->get();
+		//$shifts = Shift::all()->sortBy('susunan');
         return view('anggota.waktu_bekerja.index', compact('shifts', 'profil'));
     }
 
@@ -83,6 +88,16 @@ class WaktuBerperingkatController extends BaseController
         $shift->check_in = Carbon::parse($request->input('txtWaktuMula'));
         $shift->check_out = Carbon::parse($request->input('txtWaktuTamat'));
         $shift->save();
+    }
+	
+	
+	public function rcpUpdateWaktuBekerja($waktuBekerja, Request $request)
+    {
+        $waktuBekerja = Shift::find($waktuBekerja);
+        $waktuBekerja->name = $request->input('data.name');
+        $waktuBekerja->check_in = $request->input('data.starttime');
+        $waktuBekerja->check_out = $request->input('data.endtime');
+        $waktuBekerja->save();
     }
 
     public function rcpHapusWaktuBekerja(Shift $shift)

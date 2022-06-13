@@ -50,7 +50,10 @@
                                     <label for="comWbb">WBB</label>
                                     <select class="form-control" name="comWbb" required>
                                         @foreach($shifts as $shift)
+                                        
+                                        <?php if(strlen($shift->deleted_at) == 0){ ?>
                                         <option value="{{ $shift->id }}">{{ $shift->name }}</option>
+                                        <?php } ?>
                                         @endforeach
                                     </select>
                                 </div>

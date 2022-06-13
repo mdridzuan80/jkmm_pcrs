@@ -22,7 +22,7 @@
                             <div class="radio">
                                 <label>
                                 <input class="rdoDomain" type="radio" name="opt-domain" id="ldap" value="ldap">
-                                ldap
+                                ldap (melaka.gov)
                                 </label>
                             </div>
                         </div>
@@ -45,10 +45,12 @@
                     <td>
                         <div class="input-group input-group-sm">
                             <input id="txt-external-pam" type="text" class="form-control input-flat">
+                            
                                 <span class="input-group-btn">
                                 <button id="btn-external-pam" type="button" class="btn btn-info btn-flat">Cari!</button>
                                 </span>
                         </div>
+                        <div style="color:red; font-style:italic; font-size:12px;">*Sila masukkan Id Pengguna bagi Emel Melaka untuk buat carian. Contoh: <b>m.syafiq</b></div>
                     </td>
                 </tr>
                 <tr class="external">

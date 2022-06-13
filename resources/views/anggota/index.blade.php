@@ -6,7 +6,7 @@
 
     <section class="content-header">
         <h1>
-        <i class="fa fa-user"></i></i> Pegawai
+        <i class="fa fa-user"></i></i> Maklumat Pegawai
         <small>Menguruskan maklumat pegawai</small>
         </h1>
         <ol class="breadcrumb">

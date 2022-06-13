@@ -1,10 +1,17 @@
 @extends('layouts.master')
 
 @section('content')
-    <section class="content-header">
-        <h1>
+    <section class="content-header" style="margin-bottom:26px !important;">
+        <h1 class="pull-left">
             <i class="fa fa-book"></i></i> Laporan Bulanan
         </h1>
+        
+        <div class="pull-right">
+            <a href="/laporan" title="kembali">
+            	<span class="glyphicon glyphicon-circle-arrow-left" style="font-size:30px;"></span>
+            </a>
+        </div>
+        
     </section>
     <!-- Main content -->
     <section class="content">
@@ -12,7 +19,11 @@
             <div class="col-md-12">
                 <div class="box box-primary" >
                     <div class="box-body table-responsive">
-                        <form id="frm-laporan-bulanan">
+                        <!--<form id="frm-laporan-bulanan">-->
+                        <form target="_blank" id="form-laporan-bulanan" name="bulanan" method="POST" action="{{ route('pdf.laporan.bulanan') }}">
+                                @csrf
+                                
+                                             
                             <table class="table table-bordered">
                                 <tbody>
                                     <tr>
@@ -26,7 +37,7 @@
                                         <td>
                                             <div style="position: relative;">
                                                 <input id="departmentDisplay" class="form-control departmentDisplay" type="text" readonly style="background-color: #FFF;" placeholder="Sila pilih bahagian/ Unit" required>
-                                                <input id="departmentDisplayId" type="hidden" name="txtDepartmentId" class="form-control departmentDisplayId" required>
+                                                <input id="departmentDisplayId" type="hidden" name="departmentDisplayId" class="form-control departmentDisplayId" required>
                                                 <div id="treeDisplay" style="display:none;">
                                                     <div id="departmentsTree" style="position:relative; background-color: #FFF; overflow:auto; max-height:200px; border:1px #ddd solid"></div>
                                                 </div>
@@ -36,7 +47,7 @@
                                     <tr>
                                         <td><b>PEGAWAI</b></td>
                                         <td>
-                                            <select id="comSenPPP" name="comPegawai[]" multiple size="13" class="form-control" required>
+                                            <select id="comSenPPP" name="comSenPPP[]" multiple size="13" class="form-control" required>
                                                 <option disabled>Sila pilih Bahagian/ Unit</option>
                                             </select>
                                         </td>
@@ -44,17 +55,37 @@
                                     <tr>
                                         <td></td>
                                         <td>
+                                            <button type="button" id="cmdJanaLaporanBulananAll" class="btn btn-primary btn-flat" name="btn_papar">Papar</button>
+                                            <button type="submit" id="cmdJanaLaporanBulanan_pdf" class="btn btn-success btn-flat" name="btn_pdf">Jana PDF</button>
+                                            
+                                            <!--
                                             <button type="submit" id="btn-export-PDF" class="btn btn-default btn-flat">Jana PDF</button>
                                             <button type="reset" class="btn btn-default btn-flat">Reset</button>
+                                            -->
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </form>
+                        
+                        
+                        
+                        
+                        
+                        <div class="row">
+                            <div id="report_view" class="col-md-12"></div>
+                        </div> 
+                        
 
+                        <!--
                         <div id="lala">
 
                         </div>
+                        -->
+                        
+                        
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -176,6 +207,45 @@
                     });
                 }
             });
+			
+			
+	
+		//----------------
+		//mdridzuan 3-3-2022
+		//----------------
+			$('#cmdJanaLaporanBulananAll').on('click', function(e) {	
+		// $('#form-laporanrekodkehadiran1212').on('submit', function(e) {
+			e.preventDefault();
+		
+			var departmentDisplayId = $("#departmentDisplayId").val();
+			var comSenPPP = $("#comSenPPP").val();
+			var txtTarikh = $("#txtTarikh").val();
+			//var txtTarikhHingga = $("#txtTarikhHingga").val();
+		
+					console.log(departmentDisplayId);
+					console.log(comSenPPP);
+					console.log(txtTarikh);
+					//console.log(txtTarikhHingga);
+					
+					$.ajax({
+						url: base_url+'laporan/bulanan',
+						method: 'POST',
+				"headers": {
+					"Accept": "application/json"
+				},
+			data: {
+				'departmentDisplayId': departmentDisplayId,
+				'comSenPPP': comSenPPP,
+				'txtTarikh': txtTarikh,
+				//'txtTarikhHingga': txtTarikhHingga,
+			},
+				success: function(response){
+					$('#report_view').html(response);
+				}
+			});
+		});				
+			
+			
 
             function exportPDF(results) {
 
@@ -207,12 +277,13 @@
                             margin: {top: 75, bottom: 85},
                             headStyles: {fontSize: 8},
                             columnStyles: {
-                                0: {cellWidth: 50, fontSize:8},
-                                1: {halign: "center", fontSize:8},
-                                2: {halign: "center",  fontSize:8},
-                                3: {halign: "center",  fontSize:8},
-                                4: {cellWidth: 80,  fontSize:8},
-                                5: {cellWidth: 170,  fontSize:8}
+                                0: {cellWidth: 45, fontSize:8},
+                                1: {cellWidth: 45, halign: "center", fontSize:8},
+                                2: {cellWidth: 45, halign: "center",  fontSize:8},
+                                3: {cellWidth: 40, halign: "center",  fontSize:8},
+                                4: {cellWidth: 70,  fontSize:8, overflow:"linebreak"},
+                                5: {fontSize:8, overflow:"linebreak"},
+                                6: {cellWidth: 40}
                             },
                             didParseCell: function(data) {
                                 if (data.row.section == 'head') {
@@ -248,16 +319,17 @@
                                         kesalahan.forEach(function(item, index) {
                                             switch(item) {
                                                 case 'NONEIN':
-                                                    justifikasi += "Pg : Tiada rekod\r\n";
+                                                    justifikasi += "Pg: Tiada rekod" + " ";
+													/* justifikasi += "\u2022" + " " + "your text here"; */
                                                 break;
                                                 case 'LEWAT':
-                                                    justifikasi += "Pg : Hadir lewat\r\n";
+                                                    justifikasi += "Pg: Hadir lewat" + " ";
                                                 break;
                                                 case 'NONEOUT':
-                                                    justifikasi += "Ptg : Tiada rekod\r\n";
+                                                    justifikasi += "Ptg: Tiada rekod" + " ";
                                                 break;
                                                 case 'AWAL':
-                                                    justifikasi += "Ptg : Pulang awal\r\n";
+                                                    justifikasi += "Ptg: Pulang awal" + " ";
                                                 break;
                                             }
                                         });                                    
@@ -275,23 +347,28 @@
 
                                     if(result[data.row.index].justifikasi) {
                                         result[data.row.index].justifikasi.forEach(function(item, index) {
+											
+											if(item.flag_kelulusan === 'MOHON') { status_permohonan = 'M' }
+											if(item.flag_kelulusan === 'LULUS') { status_permohonan = 'L' }
+											if(item.flag_kelulusan === 'TOLAK') { status_permohonan = 'T' }
+											
+											if(item.medan_kesalahan === 'PAGI') { justifikasi_masa = 'PG' }
+											if(item.medan_kesalahan === 'PETANG') { justifikasi_masa = 'PTG' }
+											
+											
                                             //if(index === 0 && item.flag_kelulusan === 'LULUS') {
-                                            if(index == 0) {
-                                                if(item.flag_justifikasi === 'SAMA') {
-                                                    justifikasi += "J : " + item.keterangan + "\r\n";
-                                                } else {
-                                                    justifikasi += "JPG : " + item.keterangan + "\r\n";
-                                                }
-                                            }
-
-                                            //if(index === 1 && item.flag_kelulusan === 'LULUS' && item.flag_justifikasi === 'XSAMA') {
-                                            if(index == 1 && item.flag_justifikasi == 'XSAMA') {
-                                                justifikasi += "JPTG : " + item.keterangan + "\r\n";
-                                            }
+                                            
+											
+											justifikasi += item.kategori + ": " + status_permohonan + " (" + justifikasi_masa + ") - " + item.keterangan +" \r\n";
+											
+											
+											
                                         });
+										
                                     }
 
                                     data.cell.text = justifikasi;
+									
                                 }
                             },
                             didDrawPage: function (data) {

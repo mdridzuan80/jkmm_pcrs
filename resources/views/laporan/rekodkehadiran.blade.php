@@ -283,7 +283,11 @@ $('.dataTables_length').addClass('bs-select');
                 var options = $("#comSenPPP");
                 options.children().remove();
                 //options.append(new Option('Loading...', 0));
+<<<<<<< HEAD
 				options.append(new Option('[SILA PILIH]', 0));
+=======
+				options.append(new Option('[SEMUA]', 0));
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
 
                 $.ajax({
                     method:'post',

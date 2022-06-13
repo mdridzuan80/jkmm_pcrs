@@ -146,7 +146,11 @@ $('.dataTables_length').addClass('bs-select');
                                             </tr>
                                             <tr>
                                                 <td align="center">2.</td>
+<<<<<<< HEAD
                                                 <td width="1"><a href="{{ asset('images/manual/MANUAL_PCRS_-_PENTADBIR_BAHAGIAN_v2.0_latest.pdf') }}" target="_blank"><b>Manual Pentadbir Bahagian</b></a></td>
+=======
+                                                <td width="1"><a href="{{ asset('images/manual/MANUAL_PCRS_-_PENTADBIR_BAHAGIAN_v2.0.pdf') }}" target="_blank"><b>Manual Pentadbir Bahagian</b></a></td>
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
                                             </tr>
                                             <tr>
                                                 <td align="center">3.</td>

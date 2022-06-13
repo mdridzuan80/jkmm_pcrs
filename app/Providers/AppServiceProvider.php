@@ -30,6 +30,18 @@ class AppServiceProvider extends ServiceProvider
                 return $item instanceof Acara;
             });
         });
+
+        Collection::macro('hasAcaraPagi', function () {
+            return $this->search(function ($item, $key) {
+                return $item instanceof Acara;
+            });
+        });
+
+        Collection::macro('hasAcaraPetang', function () {
+            return $this->search(function ($item, $key) {
+                return $item instanceof Acara;
+            });
+        });
     }
 
     /**

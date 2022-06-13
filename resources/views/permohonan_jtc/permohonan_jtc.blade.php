@@ -5,6 +5,7 @@
 @php
     $permohonan = $collection['permohonan'];
 @endphp
+<<<<<<< HEAD
 
 
 
@@ -82,6 +83,8 @@ $(document).ready(function() {
 
 
 
+=======
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
 @section('content')
     <section class="content-header">
         <h1>
@@ -203,7 +206,11 @@ $(document).ready(function() {
                                             <tr>
                                                 <td></td>
                                                 <td>
+<<<<<<< HEAD
                                                     <button type="submit" id="btn-export-PDF" name="btn_hantar_jtc" class="btn btn-primary btn-flat">Papar</button>
+=======
+                                                    <button type="submit" id="btn-export-PDF" name="btn_hantar_jtc" class="btn btn-primary btn-flat">Hantar</button>
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
                                             		
                                                 </td>
                                             </tr>
@@ -230,8 +237,13 @@ $(document).ready(function() {
                 
                 <?php $nombor = 1; ?>
                 
+<<<<<<< HEAD
                 <table id="datatable_1" class="table table-hover table-striped" style="font-size: 14px !important;">
                   <thead>
+=======
+                <table class="table table-hover table-striped" style="font-size: 14px !important;">
+                  <tbody>
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
                   
                   			<tr>
                             	<th width="5%" style="text-align:center;">#</th>
@@ -244,8 +256,12 @@ $(document).ready(function() {
                                 <th width="8%" style="text-align:center;">Status</th>
                                 <th width="8%" style="text-align:center;">Operasi</th>
                             </tr>
+<<<<<<< HEAD
                   </thead>
                   <tbody>          
+=======
+                            
+>>>>>>> b00d96210a3b1cb9f410bd83eb9c990ef31cf4fd
                     @if ($permohonan->count())
                         @foreach ($permohonan as $justifikasi)
                             

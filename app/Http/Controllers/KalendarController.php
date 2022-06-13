@@ -58,6 +58,16 @@ class KalendarController extends BaseController
         return view('dashboard.acara.create');
     }
 
+    public function rpcEventAnggotaCreate_timeslip()
+    {
+        return view('dashboard.acara.create_timeslip');
+    }
+
+    public function rpcEventAnggotaCreate_catatan()
+    {
+        return view('dashboard.acara.create_catatan');
+    }
+
     public function rpcEventAnggotaStore(Anggota $profil, StoreAcaraRequest $request, Manager $fractal, Event $event)
     {
         $acara = Acara::storeAcara($profil, $request);
@@ -88,13 +98,34 @@ class KalendarController extends BaseController
     {
         $events = collect([]);
         $tarikh = Carbon::parse($tarikh);
+		
+		$list_acara_individu_ikuttarikh = Acara::detail_acara_individu_ikuttarikh($tarikh);
 
         foreach ($this->_eventable as $eventable) {
             $events = $events->merge($profil->getAcaraTerlibat($eventable, $tarikh));
         }
 
-        return view('dashboard.acara.show.acara', compact('events', 'tarikh'));
+        return view('dashboard.acara.show.acara', compact('events', 'tarikh', 'list_acara_individu_ikuttarikh'));
     }
+
+
+/*
+    public function checkAcaraPagiPetang(Anggota $profil, $tarikh)
+    {
+        $tarikhku = Carbon::parse($tarikh);
+		
+		//$acara = Acara::storeAcara($profil, $request);
+		
+		$papauu = 'loll';
+		
+		$list_acara_individu_ikuttarikh = Acara::detail_acara_individu_ikuttarikh($profil,$tarikh);
+        
+
+        //return view('dashboard.acara.show.acara',['list_acara_individu_ikuttarikh'=>$list_acara_individu_ikuttarikh,'tarikhku'=>$tarikhku]);
+		return view('dashboard.acara.show.acara', compact('list_acara_individu_ikuttarikh', 'tarikhku'));
+    }
+*/
+
 
     public function rpcCheckInOut(Anggota $profil)
     {

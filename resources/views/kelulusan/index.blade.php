@@ -1,26 +1,43 @@
 @inject('Utility', 'App\Utility')
 @inject('Acara', 'App\Acara')
 
+
+
 @extends('layouts.master')
+
+<script type="text/javascript"> 
+
+$(document).ready(function() {
+    $('#datatable_1').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+
+</script>
+
+
 @php
     $permohonan = $collection['permohonan'];
 @endphp
 @section('content')
     <section class="content-header">
         <h1>
-        <i class="fa fa-commenting"></i></i> Kelulusan Justifikasi
-        <small>Menguruskan permohonan justifikasi anggota</small>
+        <i class="fa fa-commenting"></i></i> Kelulusan Permohonan
+        <small>Menguruskan permohonan justifikasi, timeslip atau catatan anggota</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Kelulusan Justifikasi</li>
+            <li class="active">Kelulusan Permohonan</li>
         </ol>
     </section>
 
     <section class="content">
         <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Permohonan Justifikasi</h3>
+              <h3 class="box-title">Permohonan Justifikasi/ Timeslip/ Catatan</h3>
 
               {{-- <div class="box-tools pull-right">
                 <div class="has-feedback">
@@ -31,32 +48,159 @@
               <!-- /.box-tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body no-padding">
+            
+            
+            
+            <!-- Main content -->
+                <div class="row">
+                    <div class="col-md-12">
+                            <div class="box-body table-responsive">
+                                
+                                <form id="form_acara_all" name="kelulusan_justifikasi" method="POST" action="{{ route('post.kelulusan') }}" enctype="multipart/form-data">
+                                    @csrf
+                                    
+                                    <table id="datatable_1" cellspacing="0" width="100%" class="table table-striped table-bordered table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td width="1"><b>Kategori</b></td>
+                                                <td>
+                                                    <select class="form-control" name="kategori_acara">
+                                                        <option value="0" {{ session('session_ka')=='0'?'selected':''}} >[SEMUA]</option>
+                                                        <option value="J" {{ session('session_ka')=='J'?'selected':''}} >Justifikasi</option>
+                                                        <option value="T" {{ session('session_ka')=='T'?'selected':''}} >Timeslip</option>
+                                                        <option value="C" {{ session('session_ka')=='C'?'selected':''}} >Catatan</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <button type="submit" id="btn-export-PDF" name="btn_hantar_kelulusan" class="btn btn-primary btn-flat">Hantar</button>
+                                                    <!--<button id="cmdCetakAcaraAll" type="button" class="btn btn-primary btn-sm" onclick="rptSubmitCetakAcaraAll()">Cetak Laporan</button>-->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                                
+                            </div>
+                    </div>
+                </div>
+            
+            
+            <div class="row">
+                    <div class="col-md-12">
+            
+            <div class="box-body">
               <div class="table-responsive mailbox-messages">
-                <table class="table table-hover table-striped">
+              
+              <?php
+                	//if (isset($_POST['btn_hantar_kelulusan'])) {					
+						//echo $_POST['kategori_acara'];
+					//}
+					
+					$nombor = 1;
+                ?>
+                
+                <table class="table table-hover table-striped" style="font-size: 14px !important;">
                   <tbody>
+                  
+                  			<tr>
+                            	<th width="5%">#</th>
+                                <th width="15%">Nama</th>
+                                <th width="10%">Tarikh & Masa</th>
+                                <th width="8%">Kategori</th>
+                                <th width="8%">Kesalahan</th>
+                                <th width="12%">Perkara</th>
+                                <th>Keterangan</th>
+                                <th>Operasi</th>
+                            </tr>
+                            
                     @if ($permohonan->count())
                         @foreach ($permohonan as $justifikasi)
+                            
+                            @php
+                                if($justifikasi->kategori == 'J'){
+                                	$justifikasi_kategori = 'Justifikasi';
+                                }
+                                if($justifikasi->kategori == 'T'){
+                                	$justifikasi_kategori = 'Timeslip';
+                                }
+                                if($justifikasi->kategori == 'C'){
+                                	$justifikasi_kategori = 'Catatan';
+                                }
+                            @endphp
+                            
+                            <?php
+							
+							$jenis_kesalahan = '-';
+							
+                            	if($justifikasi->tarikh_mula->format('d-M-Y') == $justifikasi->tarikh_tamat->format('d-M-Y')){
+                                	$justifikasi_tarikh_finale = $justifikasi->tarikh_mula->format('d.m.Y').' ('.$justifikasi->tarikh_mula->format('H:i').' - '.$justifikasi->tarikh_tamat->format('H:i').')';
+                                }
+                                
+                                if($justifikasi->tarikh_mula->format('d-M-Y') != $justifikasi->tarikh_tamat->format('d-M-Y')){
+                                	
+                                    $justifikasi_tarikh_finale = $justifikasi->tarikh_mula->format('d.m.Y').' - '.$justifikasi->tarikh_tamat->format('d.m.Y').' ('.$justifikasi->tarikh_mula->format('H:i').' - '.$justifikasi->tarikh_tamat->format('H:i').')';
+                                }
+                                
+                                
+                                if($justifikasi->medan_kesalahan == 'PAGI'){
+                                	$justifikasi_waktu = ' (Pg)'; 
+                                    
+                                    if(strpos($justifikasi->acara_finalAttendance->kesalahan, 'NONEIN') !== false){
+                                    	$jenis_kesalahan = 'Tidak Punch-In';                                    
+                                    }
+                                    if(strpos($justifikasi->acara_finalAttendance->kesalahan, 'LEWAT') !== false){
+                                    	$jenis_kesalahan = 'Hadir Lewat';                                    
+                                    }
+                                                                   
+                                }
+                                elseif($justifikasi->medan_kesalahan == 'PETANG'){
+                                	$justifikasi_waktu =  ' (Ptg)'; 
+                                    
+                                    if(strpos($justifikasi->acara_finalAttendance->kesalahan, 'NONEOUT') !== false){
+                                    	$jenis_kesalahan = 'Tidak Punch-Out';                                    
+                                    }
+                                    if(strpos($justifikasi->acara_finalAttendance->kesalahan, 'AWAL') !== false){
+                                    	$jenis_kesalahan = 'Pulang Awal';                                    
+                                    }                               
+                                }else{
+                                	$justifikasi_waktu = '';
+                                    $jenis_kesalahan = '-';                                 
+                                }
+                            ?>
+                            
+                            
                             <tr>
-                                <td><div class="icheckbox_flat-blue" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="checkbox" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div></td>
-                                <td class="mailbox-name">{{ $justifikasi->finalAttendance->anggota->nama }}</td>
-                                <td class="mailbox-subject">
-                                  <b>[{{ $justifikasi->tarikh_mula->format('d-M-Y') }} - {{ $justifikasi->medan_kesalahan }}, {{ $Utility::kesalahan($justifikasi->medan_kesalahan, $justifikasi->finalAttendance->kesalahan) }}]</b> - <span>{{$justifikasi->keterangan}}</span>
-                                </td>
-                                <td class="mailbox-date">{{ $justifikasi->created_at->diffForHumans() }}</td>
-                                <td class="mailbox-date">
+                            	<td><?php echo $nombor++; ?>.</td>
+                                <td>{{ $justifikasi->acara_userinfo->nama }}</td>
+                                <td>{{ $justifikasi_tarikh_finale }}</td>
+                                <td>{{ $justifikasi_kategori.$justifikasi_waktu }}</td>
+                                <td>{{ $jenis_kesalahan }}</td>                                
+                                <td>{{ $justifikasi->perkara }}</td>
+                                <td>{{ $justifikasi->keterangan }}</td>
+                                <td>
                                   <div class="btn-group">
                                     <button type="button" class="btn btn-xs bg-olive btn-lulus" data-id="{{ $justifikasi->id }}" ><i class="fa fa-check-circle"></i> Lulus</button>
                                     <button type="button" class="btn btn-xs btn-danger btn-tolak" data-id="{{ $justifikasi->id }}" > <i class="fa fa-times-circle"></i> Tolak</button>
-                                  </div>̦
+                                  </div>                                
                                 </td>
                             </tr>
+                            
                         @endforeach
                     @else
-                        <tr><td>Tiada permohonan</td></tr>
+                        <tr align="center"><td colspan="7">Tiada permohonan</td></tr>
                     @endif
                   </tbody>
                 </table>
+                
+                <?php
+                	//if (isset($_POST['btn_hantar_kelulusan'])) {					
+						//echo $_POST['kategori_acara'];
+					//}
+                ?>
+                
                 <!-- /.table -->
               </div>
               <!-- /.mail-box-messages -->
@@ -68,6 +212,47 @@
 
 @section('scripts')
 <script>
+  
+	$('#txtTarikhMula').datepicker({
+		format: 'yyyy-mm-dd',
+		todayHighlight: true,
+		autoclose: true,
+		todayBtn: true,
+		orientation: 'bottom',
+		zIndexOffset: 10
+	})
+	
+	$('#txtTarikhAkhir').datepicker({
+		format: 'yyyy-mm-dd',
+		todayHighlight: true,
+		autoclose: true,
+		todayBtn: true,
+		orientation: 'bottom',
+		zIndexOffset: 10
+	})
+	
+	
+	$( "#txtTarikhMula2" ).datepicker({
+	  defaultDate: "+1w",
+	  changeMonth: true,
+	  numberOfMonths: 1,
+	  dateFormat: 'yy-mm-dd',
+	  onClose: function( selectedDate ) {
+		$( "#txtTarikhAkhir2" ).datepicker( "option", "minDate", selectedDate );
+	  }
+	});
+	
+	$( "#txtTarikhAkhir2" ).datepicker({
+	  defaultDate: "+1w",
+	  changeMonth: true,
+	  numberOfMonths: 1,
+	  dateFormat: 'yy-mm-dd',
+	  onClose: function( selectedDate ) {
+		$( "#txtTarikhMula2" ).datepicker( "option", "maxDate", selectedDate );
+	  }
+	});
+	
+  
   $(function() {
     $(".btn-lulus").on('click', function(e){
       e.preventDefault();
@@ -127,4 +312,24 @@
     }
   });
 </script>
+
+<script type="text/javascript">
+
+function rptSubmitCetakAcaraAll()
+{
+	ans = confirm('Janaan laporan akan mengambil masa. Harap bersabar...');
+	if(ans)
+	{
+		document.getElementById("form_acara_all").action = base_url+'kelulusan/cetak';
+		document.getElementById("form_acara_all").submit();
+		return true;
+	}
+	else
+	{
+		return false;	
+	}
+}
+
+</script>
+
 @endsection
