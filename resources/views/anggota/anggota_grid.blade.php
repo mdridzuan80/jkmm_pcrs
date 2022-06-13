@@ -11,6 +11,12 @@
     </thead>
     <tbody>
         @forelse ($senAnggota as $anggota)
+        
+        	<?php if(Auth::user()->perananSemasa()->id == '1'){ ?>
+            	
+            <?php } ?>
+        
+        
             <tr class="row-user" data-userid="{{ $anggota->userid }}" data-nama="{{ $anggota->nama }}" data-deptid="{{ $anggota->dept_id }}">
                 <td>{{ ($senAnggota->currentpage()-1) * $senAnggota->perpage() + $loop->index + 1 }}</td>
                 <td>{!! ($anggota->user) ? '<i title="Login" class="fa"><img src="'.asset('images/icons/icon_key.gif').'"></i>' : '' !!}</td>

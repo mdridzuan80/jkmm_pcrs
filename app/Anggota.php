@@ -107,7 +107,23 @@ class Anggota extends BaseModel implements Flowable
 
     public function scopeSenaraiAnggota($query, $search)
     {
-        return $query->xtraAnggota()->with(['user'])
+        
+		
+		if(Auth::user()->perananSemasa()->id == '5'){
+		
+		return $query->xtraAnggota()->with(['user'])
+            ->whereRaw('IF(dept_id, dept_id, 1) IN(' . $search->get('dept') . ')')
+            ->when($search->get('key'), function ($query) use ($search) {
+                $query->whereRaw("concat(badgenumber,if(isnull(nama), '', nama), if(isnull(nokp), '', nokp), if(isnull(jawatan), '', jawatan)) LIKE '%" . $search->get('key') . "%'");
+            })
+            ->when(Auth::user()->email !== env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'), function ($query) {
+                $query->authorize();
+            })
+			->where('anggota_id', Auth::user()->xtraAnggota->anggota_id);
+			
+		}else{
+		
+		return $query->xtraAnggota()->with(['user'])
             ->whereRaw('IF(dept_id, dept_id, 1) IN(' . $search->get('dept') . ')')
             ->when($search->get('key'), function ($query) use ($search) {
                 $query->whereRaw("concat(badgenumber,if(isnull(nama), '', nama), if(isnull(nokp), '', nokp), if(isnull(jawatan), '', jawatan)) LIKE '%" . $search->get('key') . "%'");
@@ -115,6 +131,8 @@ class Anggota extends BaseModel implements Flowable
             ->when(Auth::user()->email !== env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'), function ($query) {
                 $query->authorize();
             });
+			
+		}
     }
 
     public function kemaskiniProfil(Request $request)

@@ -10,7 +10,7 @@ class PcrsGate
     public function register()
     {
         // Anggota
-        Gate::define('view-anggota', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-anggota', $this->minPrivilege(Role::PENGGUNA));
 
         // Profil
         Gate::define('view-profil', $this->minPrivilege(Role::PENGGUNA));
@@ -41,7 +41,7 @@ class PcrsGate
         Gate::define('edit-flow-profil', $this->minPrivilege(Role::KETUA_KERANI));
 
         //Laporan
-        Gate::define('view-laporan', $this->minPrivilege(Role::KETUA_KERANI));
+        Gate::define('view-laporan', $this->minPrivilege(Role::PENGGUNA));
 
         // Konfigurasi
         Gate::define('view-setting', $this->minPrivilege(Role::KETUA_KERANI));

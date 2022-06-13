@@ -283,7 +283,11 @@ $('.dataTables_length').addClass('bs-select');
                 var options = $("#comSenPPP");
                 options.children().remove();
                 //options.append(new Option('Loading...', 0));
+<<<<<<< Updated upstream
 				options.append(new Option('[SEMUA]', 0));
+=======
+				options.append(new Option('[SILA PILIH]', 0));
+>>>>>>> Stashed changes
 
                 $.ajax({
                     method:'post',
@@ -297,7 +301,12 @@ $('.dataTables_length').addClass('bs-select');
                         //options.children().remove();
 
                         $.each(data.data, function(key, val) {
+<<<<<<< Updated upstream
                             options.append(new Option(val.nama+' ('+val.jawatan+')', val.anggota_id, false));
+=======
+							
+								options.append(new Option(val.nama+' ('+val.jawatan+')', val.anggota_id, false));
+>>>>>>> Stashed changes
                         });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

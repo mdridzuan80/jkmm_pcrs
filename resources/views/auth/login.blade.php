@@ -122,8 +122,13 @@ Pautan ke PCRS Versi 1.0: <a href="https://pcrsold.melaka.gov.my" target="_blank
                     
                     	<ol style="padding-left:15px !important;">
                         
+<<<<<<< Updated upstream
                         <li style="margin-bottom:10px;">Bermula  Jun 2022, PCRS Versi 2.0 akan digunakan bagi menggantikan PCRS Versi 1.0.</li>
                         <li style="margin-bottom:10px;">Sekiranya anda <b>tidak berjaya log-masuk</b> ke dalam Sistem PCRS 2.0, sila berhubung dengan <b>Pentadbir PCRS Jabatan/ Bahagian masing-masing</b> .</li>
+=======
+                        <li style="margin-bottom:10px;">Bermula  1 Jun 2022, PCRS Versi 2.0 mula digunakan bagi menggantikan PCRS Versi 1.0.</li>
+                        <li style="margin-bottom:10px;">Sekiranya anda <b>tidak berjaya log-masuk</b> ke dalam Sistem PCRS 2.0, sila berhubung dengan <b>Pentadbir PCRS Jabatan/ Bahagian masing-masing</b> untuk proses pendaftaran akaun.</li>
+>>>>>>> Stashed changes
                         <li style="margin-bottom:10px;">Anda juga boleh merujuk kepada Manual Pengguna yang disediakan atau mengajukan pertanyaan lanjut terus kepada Pentadbir PCRS Jabatan/ Bahagian masing-masing.</li>
                         <li style="margin-bottom:10px;">Bagi pengurusan data rekod kehadiran <b>bulan Mei 2022 dan sebelumnya</b>, sila gunakan PCRS Versi 1.0. Bagi pengurusan data rekod kehadiran <b>bulan Jun 2022 dan seterusnya</b>, sila gunakan PCRS Versi 2.0.</li>
                         <li style="margin-bottom:10px;">Untuk mengakses Sistem PCRS Versi 1.0, sila klik pautan berikut: <a href="https://pcrsold.melaka.gov.my" target="_blank">https://pcrsold.melaka.gov.my</a></li>

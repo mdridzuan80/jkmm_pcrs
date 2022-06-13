@@ -19,7 +19,15 @@
                 <div class="form-group">
                     <select class="form-control input-sm" name="comPeranan" style="padding-right: 5px;">
                         <option value="0" >Peranan</option>
+<<<<<<< Updated upstream
                         <option value="3" >Ketua Jabatan/Unit</option>
+=======
+                        
+                        <?php if(Auth::user()->perananSemasa()->id == '4'){ ?>
+                        <option value="3" >Ketua Jabatan/Unit</option>
+                        <?php } ?>
+                        
+>>>>>>> Stashed changes
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}" >{{ $role->name }}</option>
                         @endforeach

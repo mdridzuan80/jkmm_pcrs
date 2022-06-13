@@ -36,6 +36,7 @@ class LaporanRepository
 
         $cuti = Cuti::events()->getEventBetween([$mula, $tamat])->get()->toArray();
         $acara = $profil->acara()->events()->getByDateRange($mula, $tamat)->get();
+        //$acara = $profil->acara()->events()->getByDateRange($mula, $tamat)->where('flag_kelulusan', '!=', 'BATAL')->get();
 
         $events = $checkinout->merge($acara)->merge($cuti);
         $startTime = today()->addHours(4);
