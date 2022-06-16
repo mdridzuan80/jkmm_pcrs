@@ -13,75 +13,74 @@
         <div class="row">
 
             <!--
-                            @if (Auth::user()->email != env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal') && Auth::user()->xtraAnggota->baseDepartment->isActiveBdr())
+                                @if (Auth::user()->email != env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal') && Auth::user()->xtraAnggota->baseDepartment->isActiveBdr())
     <div class="col-md-12">
-                                <div class="box box-primary">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title"><i class="fa fa-fw fa-calendar"></i> BDR Check-In/Out</h3>
-<<<<<<< Updated upstream
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="card card-widget widget-user">
-                                            <?php //Add the bg color to the header using any of the bg-* classes
-                                            ?>
-                                            <div class="widget-user-header bg-info">
-                                                <h3 class="widget-user-username">{{ Auth::user()->xtraAnggota ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}</h3>
-                                                <h5 class="widget-user-desc">
-                    @if (Auth::user()->email === env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'))
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title"><i class="fa fa-fw fa-calendar"></i> BDR Check-In/Out</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="card card-widget widget-user">
+                                                <?php //Add the bg color to the header using any of the bg-* classes
+                                                ?>
+                                                <div class="widget-user-header bg-info">
+                                                    <h3 class="widget-user-username">{{ Auth::user()->xtraAnggota ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}</h3>
+                                                    <h5 class="widget-user-desc">
+                        @if (Auth::user()->email === env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'))
     <small>Sistem Administrator</small>
 @else
     <small>{{ ucfirst(Auth::user()->xtraAnggota->jawatan) }}</small>
     @endif
-                                                </h5>
-                                            </div>
-                                            <div class="card-footer" id="app-bdr-check-inout">
-                                                <div class="row">
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <button type="button" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-footer" id="app-bdr-check-inout">
+                                                    <div class="row">
+                                                        <div class="col-sm-3 border-right">
+                                                            <div class="description-block">
+                                                                <button type="button" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>
+                                                            </div>
+                                                            <?php // /.description-block
+                                                            ?>
                                                         </div>
-                                                        <?php // /.description-block
+                                                        <?php // /.col
+                                                        ?>
+                                                        <div class="col-sm-3 border-right">
+                                                            <div class="description-block">
+                                                                <h5 class="description-header">@{{ checkInDate }}</h5>
+                                                                <span class="description-text">@{{ checkInTime }}</span>
+                                                            </div>
+                                                            <?php // /.description-block
+                                                            ?>
+                                                        </div>
+                                                        <div class="col-sm-3 border-right">
+                                                            <div class="description-block">
+                                                                <h5 class="description-header">@{{ checkOutDate }}</h5>
+                                                                <span class="description-text">@{{ checkOutTime }}</span>
+                                                            </div>
+                                                            <?php // /.description-block
+                                                            ?>
+                                                        </div>
+                                                        <?php // /.col
+                                                        ?>
+                                                        <div class="col-sm-3">
+                                                            <div class="description-block">
+                                                                <button type="button" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>
+                                                            </div>
+                                                            <?php // /.description-block
+                                                            ?>
+                                                        </div>
+                                                        <?php // /.col
                                                         ?>
                                                     </div>
-                                                    <?php // /.col
-                                                    ?>
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <h5 class="description-header">@{{ checkInDate }}</h5>
-                                                            <span class="description-text">@{{ checkInTime }}</span>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <h5 class="description-header">@{{ checkOutDate }}</h5>
-                                                            <span class="description-text">@{{ checkOutTime }}</span>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <?php // /.col
-                                                    ?>
-                                                    <div class="col-sm-3">
-                                                        <div class="description-block">
-                                                            <button type="button" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <?php // /.col
+                                                    <?php // /.row
                                                     ?>
                                                 </div>
-                                                <?php // /.row
-                                                ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
     @endif
-                            -->
+                                -->
 
 
             <div class="col-md-12">
@@ -102,163 +101,6 @@
                     </div>
                 </div>
             </div>
-=======
-                                    </div>
-                                    <div class="box-body">
-                                        <div class="card card-widget widget-user">
-                                            <?php //Add the bg color to the header using any of the bg-* classes
-                                            ?>
-                                            <div class="widget-user-header bg-info">
-                                                <h3 class="widget-user-username">{{ Auth::user()->xtraAnggota ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}</h3>
-                                                <h5 class="widget-user-desc">
-                    @if (Auth::user()->email === env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'))
-    <small>Sistem Administrator</small>
-@else
-    <small>{{ ucfirst(Auth::user()->xtraAnggota->jawatan) }}</small>
-    @endif
-                                                </h5>
-                                            </div>
-                                            <div class="card-footer" id="app-bdr-check-inout">
-                                                <div class="row">
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <button type="button" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <?php // /.col
-                                                    ?>
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <h5 class="description-header">@{{ checkInDate }}</h5>
-                                                            <span class="description-text">@{{ checkInTime }}</span>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <div class="col-sm-3 border-right">
-                                                        <div class="description-block">
-                                                            <h5 class="description-header">@{{ checkOutDate }}</h5>
-                                                            <span class="description-text">@{{ checkOutTime }}</span>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <?php // /.col
-                                                    ?>
-                                                    <div class="col-sm-3">
-                                                        <div class="description-block">
-                                                            <button type="button" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>
-                                                        </div>
-                                                        <?php // /.description-block
-                                                        ?>
-                                                    </div>
-                                                    <?php // /.col
-                                                    ?>
-                                                </div>
-                                                <?php // /.row
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-    @endif
-                            -->
-
-
-            
-            <div class="col-md-12">
-                <div class="box box-primary">
-                    <!--
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-fw fa-calendar"></i> BDR Check-In/Out</h3>
-                    </div>
-                    -->
-                    <div class="box-body">
-                        <div class="card card-widget widget-user">
-                            <?php //Add the bg color to the header using any of the bg-* classes
-                            ?>
-                            <div class="widget-user-header bg-info">
-                                <h3 class="widget-user-username">{{ Auth::user()->xtraAnggota ? Auth::user()->xtraAnggota->nama : Auth::user()->name }}</h3>
-                                <h5 class="widget-user-desc">
-    @if (Auth::user()->email === env('PCRS_DEFAULT_USER_ADMIN', 'admin@internal'))
-<small>Sistem Administrator</small>
-@else
-<small>{{ ucfirst(Auth::user()->xtraAnggota->jawatan) }}</small>
-@endif
-                                </h5>
-                            </div>
-                            <div class="card-footer" id="app-bdr-check-inout">
-                                <div class="row">
-                                    <div class="col-sm-3 border-right">
-                                        <div class="description-block" style="font-weight:bold; font-size:16px;">
-                                            <!--<button type="button" disabled="disabled" class="btn btn-block btn-success btn-lg" :disabled="isCheckIn" @click="checkingIn">Check-In</button>-->
-                                            Check-In
-                                        </div>
-                                        <?php // /.description-block
-                                        ?>
-                                    </div>
-                                    <?php // /.col
-                                    ?>
-                                    <div class="col-sm-3 border-right">
-                                        <div class="description-block">
-                                            <h5 class="description-header">@{{ checkInDate }}</h5>
-                                            <span class="description-text">@{{ checkInTime }}</span>
-                                        </div>
-                                        <?php // /.description-block
-                                        ?>
-                                    </div>
-                                    <div class="col-sm-3 border-right">
-                                        <div class="description-block">
-                                            <h5 class="description-header">@{{ checkOutDate }}</h5>
-                                            <span class="description-text">@{{ checkOutTime }}</span>
-                                        </div>
-                                        <?php // /.description-block
-                                        ?>
-                                    </div>
-                                    <?php // /.col
-                                    ?>
-                                    <div class="col-sm-3">
-                                        <div class="description-block" style="font-weight:bold; font-size:16px;">
-                                            <!--<button type="button" disabled="disabled" class="btn btn-block btn-danger btn-lg" :disabled="isCheckOut" @click="checkingOut">Check-Out</button>-->
-                                         Check-Out   
-                                        </div>
-                                        <?php // /.description-block
-                                        ?>
-                                    </div>
-                                    <?php // /.col
-                                    ?>
-                                </div>
-                                <?php // /.row
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="col-md-12">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-fw fa-calendar"></i> Kalendar</h3>
-                        <div class="box-tools pull-right">
-                            <!-- Buttons, labels, and many other things can be placed here! -->
-                            <!-- Here is a label for example -->
-                            <span id='petunjuk'><i class="fa fa-fw fa-info"></i></span>
-                        </div><!-- /.box-tools -->
-                    </div>
-                    <div class="box-body">
-                        <div id="calendar"></div>
-                    </div>
-                    <div class="overlay">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                </div>
-            </div>
->>>>>>> Stashed changes
         </div>
 
         <div class="modal fade" id="modal-default-timeslip" style="display: none;">
@@ -389,11 +231,7 @@
                                 backdrop: 'static',
                             });
                         }
-<<<<<<< Updated upstream
                     },
-=======
-                    }/*						,
->>>>>>> Stashed changes
                     laporan: {
                         text: 'Laporan Bulanan',
                         click: function() {
@@ -404,7 +242,6 @@
                             );
                         }
                     }
-					*/
                 },
                 header: {
                     right: 'timeslip catatan laporan  prev,today,next'
@@ -822,7 +659,6 @@
                 $('#txt-justifikasi-petang').prop('disabled', status);
                 $('#btn-justifikasi-petang').prop('disabled', status);
             }
-<<<<<<< Updated upstream
 
             function disableFormComponentPagi(status) {
                 $('#frm-mohon-justifikasi-pagi').trigger('reset');
@@ -837,22 +673,6 @@
                 frmJustifikasi.alasan = e.target['txt-justifikasi'].value;
                 frmJustifikasi.medanKesalahan = e.target['txt-medan-kesalahan'].value;
 
-=======
-
-            function disableFormComponentPagi(status) {
-                $('#frm-mohon-justifikasi-pagi').trigger('reset');
-                $('#chk-sama-petang').prop('disabled', status);
-                $('#txt-justifikasi-pagi').prop('disabled', status);
-                $('#btn-justifikasi-pagi').prop('disabled', status);
-            }
-
-            function hantarJustifikasi(e) {
-                frmJustifikasi.finalAttendance = e.target['txt-final-attendance-id'].value;
-                frmJustifikasi.tarikh = e.target['txt-tarikh'].value;
-                frmJustifikasi.alasan = e.target['txt-justifikasi'].value;
-                frmJustifikasi.medanKesalahan = e.target['txt-medan-kesalahan'].value;
-
->>>>>>> Stashed changes
                 swal({
                     title: 'Amaran!',
                     text: 'Anda pasti untuk memohon justifikasi ini?',
